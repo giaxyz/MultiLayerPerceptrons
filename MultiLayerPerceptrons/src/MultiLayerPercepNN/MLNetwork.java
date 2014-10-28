@@ -1,8 +1,32 @@
 package MultiLayerPercepNN;
 
-public class MLNetwork {
+import java.util.ArrayList;
+import java.util.HashMap;
 
-	public MLNetwork(){
+public class MLNetwork {
+	
+	private ArrayList<HashMap<Integer,int[]>> networkStructure;
+	private ArrayList<HashMap<Integer,double[]>> networkWeights;
+	private HashMap<Integer, Double> biasWeights;
+	private HashMap<Integer, Double> biasValues;
+	private double learningRate;
+	private double momentum;
+	
+	public MLNetwork(
+			ArrayList<HashMap<Integer,int[]>> networkStructure, 
+			ArrayList<HashMap<Integer,double[]>> networkWeights,
+			HashMap<Integer, Double> biasWeights,
+			HashMap<Integer, Double> biasValues,
+			double learningRate,
+			double momentum
+			){
+		
+		this.networkStructure = networkStructure;
+		this.networkWeights = networkWeights;
+		this.biasWeights = biasWeights;
+		this.biasValues = biasValues;
+		this.learningRate = learningRate;
+		this.momentum = momentum;
 		
 		boolean printInfo = true;
 		boolean isOutput = false;
