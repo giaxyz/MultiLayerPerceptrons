@@ -29,6 +29,13 @@ public class MLNetwork {
 		this.learningRate = learningRate;
 		this.momentum = momentum;
 		
+		getNetworkBiasWeights(false);
+		getNetworkBiasValues(false);
+		getNetworkWeights(false);
+		getNetworkStructure(true);
+		getNetworkLearningRate(true);
+		getNetworkMomentum(true);
+		
 		boolean printInfo = true;
 		boolean isOutput = false;
 		boolean isInput = false;
@@ -40,8 +47,8 @@ public class MLNetwork {
 	
 	}
 	
-	
 	// Create A Neuron
+	
 	public Perceptron createPerceptron(double biasWeight, double biasValue, int neuronID, int layerID, boolean isOutput, boolean isInput, boolean printInfo) {
 		
 		
@@ -50,7 +57,83 @@ public class MLNetwork {
 			
 			System.out.println("Perceptron Details : " + perceptron);
 		}
+		
 		return perceptron;
+		
+	}
+
+	public HashMap<Integer, Double> getNetworkBiasWeights(boolean printInfo){
+		
+		if(printInfo){
+			
+			System.out.println("\nNetwork Bias weights : " );
+			MlUtils.printHashMapIntDouble(this.biasWeights);
+		}
+		
+		return this.biasWeights;
+		
+	}
+	
+	public HashMap<Integer, Double> getNetworkBiasValues(boolean printInfo){
+		
+		if(printInfo){
+			
+			System.out.println("\nNetwork Bias values : " );
+			MlUtils.printHashMapIntDouble(this.biasValues);
+		}
+		
+		return this.biasValues;
+		
+	}
+
+	public ArrayList<HashMap<Integer,double[]>> getNetworkWeights(boolean printInfo){
+		
+		if(printInfo){
+			
+			for(int i = 0; i<this.networkWeights.size(); i++){
+				
+				HashMap<Integer,double[]> currentNeuronWeightInfo = networkWeights.get(i);
+				System.out.println("\nNetwork Weights Layer " + (i-1) + " : ");
+				MlUtils.printHashMapIntDoubleArray(currentNeuronWeightInfo);;
+			}
+			
+		}
+		
+		return this.networkWeights;
+	}
+
+	public ArrayList<HashMap<Integer,int[]>> getNetworkStructure(boolean printInfo){
+		
+		if(printInfo){
+			
+			for(int i = 0; i<this.networkStructure.size(); i++){
+				
+				HashMap<Integer,int[]> currentNeuronWeightInfo = networkStructure.get(i);
+				System.out.println("\nNetwork Connections Layer " + (i-1) + " : ");
+				MlUtils.printHashMapIntIntArray(currentNeuronWeightInfo);;
+			}
+			
+		}
+		
+		
+		return this.networkStructure;
+	}
+
+	public double getNetworkLearningRate(boolean printInfo){
+		
+		if(printInfo){
+			System.out.println("\nNetwork Learning Rate : " + this.learningRate);
+		}
+		return this.learningRate;
+		
+	}
+
+	public double getNetworkMomentum(boolean printInfo){
+		
+		if(printInfo){
+			System.out.println("\nCurrent Momentum : " + this.momentum);
+		}
+		return this.momentum;
 		
 	}
 }
