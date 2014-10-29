@@ -36,8 +36,8 @@ public class MLNetwork {
 		int neuronID =  0;
 		int layerID = 1; 
 		Perceptron perceptron = createPerceptron(biasWeight, biasValue, neuronID, layerID, isOutput, isInput, printInfo);
-		perceptron.getBetaError(true);
-		perceptron.getInputIDs(true);
+		perceptron.getBetaError(false);
+		perceptron.getInputIDs(false);
 	}
 	
 	
