@@ -13,6 +13,7 @@ public class MLNetwork {
 	private double momentum;
 	
 	public MLNetwork(
+			
 			ArrayList<HashMap<Integer,int[]>> networkStructure, 
 			ArrayList<HashMap<Integer,double[]>> networkWeights,
 			HashMap<Integer, Double> biasWeights,
@@ -36,12 +37,11 @@ public class MLNetwork {
 		int neuronID =  0;
 		int layerID = 1; 
 		Perceptron perceptron = createPerceptron(biasWeight, biasValue, neuronID, layerID, isOutput, isInput, printInfo);
-		perceptron.getBetaError(false);
-		perceptron.getInputIDs(false);
+	
 	}
 	
 	
-	// Create A Perceptron
+	// Create A Neuron
 	public Perceptron createPerceptron(double biasWeight, double biasValue, int neuronID, int layerID, boolean isOutput, boolean isInput, boolean printInfo) {
 		
 		

@@ -28,21 +28,137 @@ public class NetworkMaker {
 		
 		if(networkName.equals("SelectedConnections")){
 			
-			System.out.println("Three by 1 selected");
+			System.out.println("--------Setting up Gia's 3 x 1 Network Configuration--------");
 			this.data = selectedConnectionsInputData();
 			this.networkStructure = selectedConnectionsNetworkStructure();
-			this.networkStructureWeights = selectedConnectioneNetworkStructureWeights();
+			this.networkStructureWeights = selectedConnectionNetworkStructureWeights();
 			this.biasValues = selectedConnectionsBiasValues();
 			this.biasWeights = selectedConnectionsBiasWeights();
+		
+		}else if (networkName.equals("FullyConnected")){
+			
+			System.out.println("--------Setting up Gia's 2 x 1 FullyConnected Configuration------");
+			this.data = fullyConnectedInputData();
+			this.networkStructure = fullyConnectedNetworkStructure();
+			this.networkStructureWeights = fullyConnectedNetworkStructureWeights();
+			this.biasValues = fullyConnectedBiasValues();
+			this.biasWeights = fullyConnectedBiasWeights();
 			
 		}else{
 			
-			System.out.println("Fully Connected");
+			throw new Exception("Error, You have yet to design this network.  See NetworkMaker Class");
 		}
 	}
 	
+	
+	// ------ Set Methods for the "Fully Connected" Network, so named, all hard coded
+	// This section needs duplicating and setting for any other network, and you 
+	// have to know what you're doing in order to set this up properly
+	
+	private HashMap<Integer, Double> fullyConnectedBiasWeights(){
+
+		HashMap<Integer, Double> biasWeights = new HashMap<Integer, Double>();
+		biasWeights.put(0,1.0);
+		biasWeights.put(1,1.0);
+		biasWeights.put(2,-0.1);
+		biasWeights.put(3,-0.15);
+		biasWeights.put(4,0.05);
+		return biasWeights;
+	}
+	
+	private HashMap<Integer, Double> fullyConnectedBiasValues(){
+		
+		HashMap<Integer, Double> biasValues = new HashMap<Integer, Double>();
+		biasValues.put(0,1.0);
+		biasValues.put(1,1.0);
+		biasValues.put(2,1.0);
+		biasValues.put(3,1.0);
+		biasValues.put(4,1.0);
+		return biasValues;
+	}
+	
+	private ArrayList<HashMap<Integer,double[]>> fullyConnectedNetworkStructureWeights(){
+		
+		ArrayList<HashMap<Integer,double[]>> networkStructWeightsHere = new ArrayList<HashMap<Integer,double[]>>();
+		
+		// Input Layer Weights Map
+		HashMap<Integer,double[]> InputLayerWeights = new HashMap<Integer, double[]>();
+		InputLayerWeights.put(0, null); // put the neuron ID, and then the weights of the respective IDs it is connected to
+		InputLayerWeights.put(1, null);
+		
+		// Layer 0 Weights Map
+		HashMap<Integer,double[]> Layer0Weights = new HashMap<Integer, double[]>();
+		double[] connectionWeights2 = {-0.1,0.2};
+		double[] connectionWeights3 = {0.3,-0.1};
+		Layer0Weights.put(2, connectionWeights2);
+		Layer0Weights.put(3, connectionWeights3);
+		
+		
+		// Output Layer Weights Map
+		HashMap<Integer,double[]> OutputLayerWeights = new HashMap<Integer, double[]>();
+		double[] outputWeights = {-0.1,0.2};
+		OutputLayerWeights.put(4, outputWeights);
+		
+		// Add all layers to the network structure
+		networkStructWeightsHere.add(InputLayerWeights);
+		networkStructWeightsHere.add(Layer0Weights);
+		networkStructWeightsHere.add(OutputLayerWeights);
+		
+		return networkStructWeightsHere;
+	}
+
+	private ArrayList<HashMap<Integer,int[]>> fullyConnectedNetworkStructure(){
+		
+		ArrayList<HashMap<Integer,int[]>> networkStructureSelected = new ArrayList<HashMap<Integer,int[]>>();
+		
+		// -- Input Layer Connections
+		
+		HashMap<Integer,int[]> InputLayer = new HashMap<Integer, int[]>();
+		InputLayer.put(0, null); // put the neuron ID, and then the IDs of the ones it is connected to
+		InputLayer.put(1, null);
+		
+		// -- Layer 0 Connections
+		
+		HashMap<Integer,int[]> Layer0 = new HashMap<Integer, int[]>();
+		int[] connections2 = {0,1};
+		int[] connections3 = {0,1};
+		Layer0.put(2, connections2);
+		Layer0.put(3, connections3);
+	
+		
+		// -- Output Layer Connections
+		
+		HashMap<Integer,int[]> OutputLayer = new HashMap<Integer, int[]>();
+		int[] connections4 = {2,3};
+		OutputLayer.put(4,connections4);
+		
+		networkStructureSelected.add(InputLayer);
+		networkStructureSelected.add(Layer0);
+		networkStructureSelected.add(OutputLayer);
+		
+		return networkStructureSelected;
+	}
+	
+	private ArrayList<ArrayList<Double>> fullyConnectedInputData() throws Exception{
+		
+		ArrayList<ArrayList<Double>> inputData = new ArrayList<ArrayList<Double>>();
+		ArrayList<Double> inputsX1 =  new ArrayList<Double>(Arrays.asList(0.0,0.0));
+		ArrayList<Double> inputsX2 =  new ArrayList<Double>(Arrays.asList(0.0,1.0));
+		ArrayList<Double> outputs =  new ArrayList<Double>(Arrays.asList(0.0,1.0));
+		inputData.add(inputsX1);
+		inputData.add(inputsX2);
+		inputData.add(outputs);
+		InputDataChecker inputDataCheck = new InputDataChecker(inputData); // put the input data checker in the utilities class
+		inputDataCheck.checkData();
+		inputDataCheck.getData(false);
+		
+		return inputData;
+		
+	}
+	
+	
 	// ------ Set Methods for the "Selected Connections" Network, so named, all hard coded
-	// This section needs duplicating and setting for any other network, and you kinda
+	// This section needs duplicating and setting for any other network, and you 
 	// have to know what you're doing in order to set this up properly
 	
 	private HashMap<Integer, Double> selectedConnectionsBiasWeights(){
@@ -69,7 +185,7 @@ public class NetworkMaker {
 		return biasValues;
 	}
 	
-	private ArrayList<HashMap<Integer,double[]>> selectedConnectioneNetworkStructureWeights(){
+	private ArrayList<HashMap<Integer,double[]>> selectedConnectionNetworkStructureWeights(){
 		
 		ArrayList<HashMap<Integer,double[]>> networkStructWeightsHere = new ArrayList<HashMap<Integer,double[]>>();
 		
@@ -148,13 +264,14 @@ public class NetworkMaker {
 		inputData.add(outputs);
 		InputDataChecker inputDataCheck = new InputDataChecker(inputData); // put the input data checker in the utilities class
 		inputDataCheck.checkData();
-		inputDataCheck.getData(true);
+		inputDataCheck.getData(false);
 		
 		return inputData;
 		
 	}
 
-	/// --- Get Methods ---------------------------------------------------------------
+	/// --- All Get Methods ---------------------------------------------------------------
+	
 	public ArrayList<ArrayList<Double>> getInputData(boolean printInfo){
 		
 		if(printInfo){
@@ -176,7 +293,7 @@ public class NetworkMaker {
 		
 		if(printInfo){
 			
-			System.out.println("Network Structure : " + this.networkStructureWeights);
+			System.out.println("Network Structure Weigths : " + this.networkStructureWeights);
 		} 
 		return this.networkStructureWeights;
 	}
