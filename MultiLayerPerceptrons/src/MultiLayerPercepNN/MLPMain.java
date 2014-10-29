@@ -22,8 +22,8 @@ public class MLPMain {
 		HashMap<Integer, Double> biasValues = networkMaker.getBiasValues(false);
 		
 		// Create the network
-		MLNetwork network = new MLNetwork(networkStructure, networkStructureWeights, biasWeights, biasValues, learningRate, momentum);
-		
+		MLNetwork network = new MLNetwork(data, networkStructure, networkStructureWeights, biasWeights, biasValues, learningRate, momentum);
+		network.getNeurons(true);
 		
 	}
 

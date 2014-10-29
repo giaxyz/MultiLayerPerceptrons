@@ -28,7 +28,7 @@ public class NetworkMaker {
 		
 		if(networkName.equals("SelectedConnections")){
 			
-			System.out.println("--------Setting up Gia's 3 x 1 Network Configuration--------");
+			//System.out.println("--------Setting up Gia's 3 x 1 Network Configuration--------");
 			this.data = selectedConnectionsInputData();
 			this.networkStructure = selectedConnectionsNetworkStructure();
 			this.networkStructureWeights = selectedConnectionNetworkStructureWeights();
@@ -37,7 +37,7 @@ public class NetworkMaker {
 		
 		}else if (networkName.equals("FullyConnected")){
 			
-			System.out.println("--------Setting up Gia's 2 x 1 FullyConnected Configuration------");
+			//System.out.println("--------Setting up Gia's 2 x 1 FullyConnected Configuration------");
 			this.data = fullyConnectedInputData();
 			this.networkStructure = fullyConnectedNetworkStructure();
 			this.networkStructureWeights = fullyConnectedNetworkStructureWeights();

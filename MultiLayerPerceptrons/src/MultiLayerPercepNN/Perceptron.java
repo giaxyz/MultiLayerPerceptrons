@@ -5,12 +5,11 @@ import java.util.ArrayList;
 
 public class Perceptron {
 	
-	private ArrayList<Double> inputValues; // Inputs from the previous node
-	private ArrayList<Double> inputWeights; // input weights
+
+
 	private ArrayList<Double> deltaRow; // input weights
-	private ArrayList<Integer> inputIDs; // the id of the other neuron inputs
+
 	private double output; // the calculated output
-	private double bias;
 	private double biasWeight;
 	private int layerID;
 	private int neuronID;
@@ -20,25 +19,35 @@ public class Perceptron {
 	private String neuronDetails;
 	private double biasValue;
 	private double betaError;
+	private int[] neuronConnections;
+	private double[] neuronWeights;
+	private ArrayList<ArrayList<Double>> inputData;
 	
 	
-	public Perceptron(double biasWeight, double biasValue, int neuronID, int layerID, boolean isOutput, boolean isInput){
+	
+	public Perceptron(double biasWeight, double biasValue, 
+			int neuronID, int layerID, 
+			boolean isOutput, boolean isInput,
+			int[] neuronConnections, double[] neuronWeights,
+			ArrayList<ArrayList<Double>> inputData){
 		
 		this.biasWeight = biasWeight;
 		this.biasValue = biasValue;
 		this.isInput = isInput;
 		this.isOutput = isOutput;
-		this.sum = Double.NEGATIVE_INFINITY;
-		this.inputIDs = new ArrayList<Integer>();
-		this.inputValues = new ArrayList<Double>();
 		this.layerID = layerID;
 		this.neuronID = neuronID;
 		this.neuronDetails = ("L_" + layerID + " N_" + neuronID );
-		this.biasValue = biasValue;
-		this.inputWeights = new ArrayList<Double>();
+		this.neuronConnections = neuronConnections;
+		this.neuronWeights = neuronWeights;
+		this.inputData = inputData;
+		
+		this.sum = Double.NEGATIVE_INFINITY;
 		this.betaError = Double.POSITIVE_INFINITY;
 		this.output = Double.NEGATIVE_INFINITY; 
 		this.deltaRow = new ArrayList<Double>(); 
+	
+		
 	}
 	
 	// --------------   All Get and Set Methods  -------------------------------------
@@ -87,23 +96,6 @@ public class Perceptron {
 		return this.sum;
 	}
 	
-	public ArrayList<Integer> getInputIDs(boolean printInfo){
-		
-		if(printInfo){
-			System.out.println("InputIDs for " + this.neuronDetails + " : " + this.inputIDs);
-		}
-		
-		return this.inputIDs;
-	}
-	
-	public ArrayList<Double> getInputValues(boolean printInfo){
-		
-		if(printInfo){
-			System.out.println("Inputs for " + this.neuronDetails + " : " + this.inputValues);
-		}
-		return this.inputValues;
-	}
-	
 	public int getLayerID(boolean printInfo){
 		
 		if(printInfo){
@@ -138,19 +130,7 @@ public class Perceptron {
 		}
 		return this.biasValue;
 	}
-	
-	public void setInputWeights(ArrayList<Double> inputWeights){
-		this.inputWeights = inputWeights;
-	}
-	
-	public ArrayList<Double> getInputWeights(boolean printInfo){
-		
-		if(printInfo){
-			System.out.println("InputWeights for " + this.neuronDetails + " : " + this.inputWeights);
-		}
-		return this.inputWeights;
-	}
-	
+
 	public void setBetaError(double betaError){
 		this.betaError = betaError;
 	}

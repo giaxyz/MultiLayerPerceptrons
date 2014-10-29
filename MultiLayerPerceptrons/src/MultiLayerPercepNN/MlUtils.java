@@ -5,6 +5,36 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class MlUtils {
+	
+	public static void printDoubleArray(double[] doubleArray){
+		
+		System.out.print("[");
+		if(doubleArray != null){
+			for(int i = 0; i< doubleArray.length; i++){
+				System.out.print(" " + doubleArray[i] + " ");
+			}
+			
+		}else{
+			System.out.print("null");
+		}
+		
+		System.out.print("]");	
+	}
+	
+	public static void printIntArray(int[] intArray){
+		
+		System.out.print("[");
+		if(intArray != null){
+			for(int i = 0; i< intArray.length; i++){
+				System.out.print(" " + intArray[i] + " ");
+			}
+			
+		}else{
+			System.out.print("null");
+		}
+		
+		System.out.print("]");	
+	}
 
 	public static void printHashMapIntIntArray(HashMap<Integer, int[]> map) {
 		
