@@ -53,6 +53,7 @@ public class MLNetwork {
 		}
 		
 		int maxLayer = -1;
+		
 		if(test1Layer){
 			maxLayer = layerToTest + 1;
 		}else{
@@ -92,9 +93,9 @@ public class MLNetwork {
 		
 		ArrayList<Double> currentInputsX = getExample(exampleIndex, false);
 		setLayerNeuronInputs(currentInputsX, layerIndex, exampleIndex, true);
-		//computeSumsinLayer(layerIndex, false);
+		computeSumsinLayer(layerIndex, false);
 	}
-	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	
 	private void computeSumsinLayer(int layerIndex, boolean printInfo) throws Exception {
 		
 		if(printInfo){
@@ -107,8 +108,8 @@ public class MLNetwork {
 			
 			Perceptron neuron = layerNeurons.get(i);
 			double sum = neuron.computeSum(false);
-			//neuron.activateSigmoid(sum, true);
-			//neuron.getOutputValue(true);
+			neuron.activateSigmoid(sum, true);
+			neuron.getOutput(true);
 		}
 			
 
@@ -121,7 +122,7 @@ public class MLNetwork {
 		
 		if(printInfo){
 			
-			System.out.println("Setting inputs for Layer : " + layerIndex);
+			//System.out.println("Setting inputs for Layer : " + layerIndex);
 			
 		}
 			ArrayList<Perceptron> currentLayer = getLayerNeurons(layerIndex, false);
@@ -152,41 +153,59 @@ public class MLNetwork {
 				
 			}else{ ////!!!!!!!!!1 Otherwise, find out from the hash map, what the connections are
 				
-				System.out.println("Setting inputs for Layer" + layerIndex);
-//				ArrayList<Perceptron> previousLayer = getLayerNeurons((layerIndex) - 1, false);
-//				
-//				if(printInfo){
-//					
-//					//System.out.println("Previous layer : " + previousLayer);
-//				}
 				
-//				for(int i = 0; i< currentLayer.size(); i++){
-//					
-//					ArrayList<Double> inputsForCurrentLayer = new ArrayList<Double>();
-//					Perceptron neuron = currentLayer.get(i);
-//					
-//					for(int k = 0; k< previousLayer.size(); k++){
-//						double currentNeuronOutput = previousLayer.get(k).getOutput(false);
-//						inputsForCurrentLayer.add(currentNeuronOutput);
-//					
-//					}
-//					
-//					if(printInfo){
-//						System.out.println("\tInputs for neuron : " + neuron + " " + inputsForCurrentLayer );
-//					}
-//					
-//					double currentBiasValue = neuron.getBiasValue(false);
-//					inputsForCurrentLayer.add(currentBiasValue);
-//					neuron.setInputs(inputsForCurrentLayer);
-//					neuron.getInputs(false);
-//					
-//				}
 				
+				for(int i = 0; i< currentLayer.size(); i++){
+					
+					ArrayList<Double> inputsForCurrentNeuron = new ArrayList<Double>();
+					Perceptron neuron = currentLayer.get(i);
+					System.out.println("CurrentNeuron: " + neuron);
+					int layerHashMapIndex = layerIndex + 1; // because the first array is the inputs at -1
+					//System.out.print("    -- at layer : " + layerHashMapIndex + "\n");
+					int[] neuronConnectedNeurons = getNetworkStructure(false).get(layerHashMapIndex).get(neuron.getNeuronID(false));
+					
+					for(int j = 0; j< neuronConnectedNeurons.length; j++){
+						
+						int connectedNeuronIndex = neuronConnectedNeurons[j];
+						Perceptron connectedNeuron = getNeuronID(connectedNeuronIndex, false);
+						//System.out.println("\tConnection : " + connectedNeuron);
+						double outputOfConnectedNeuron = connectedNeuron.getOutput(false);
+						inputsForCurrentNeuron.add(outputOfConnectedNeuron);
+						
+					}
+					
+					double currentBiasValue = neuron.getBiasValue(false);
+					inputsForCurrentNeuron.add(currentBiasValue);
+					//System.out.println("\t\t "+ inputsForCurrentNeuron);
+					neuron.setInputs(inputsForCurrentNeuron);
+					neuron.getInputs(true);
+				}
 				
 			}
 		
 	}
 	
+	private Perceptron getNeuronID(int connectedNeuronIndex, boolean printInfo) {
+		
+		
+		
+		for(int i = 0; i<allNeurons.size(); i++){
+			
+			Perceptron currentNeuron = allNeurons.get(i);
+			int ID = currentNeuron.getNeuronID(false);
+			if(ID == connectedNeuronIndex){
+				
+				if(printInfo){
+					System.out.println(currentNeuron);
+				}
+				
+				return currentNeuron;
+			}
+		}
+		
+		return null;
+	}
+
 	public ArrayList<Perceptron> getLayerNeurons(int layerIndex, boolean printInfo){
 		
 		ArrayList<Perceptron> currentLayer = new ArrayList<Perceptron>();

@@ -9,8 +9,8 @@ public class MLPMain {
 		
 		//   ------------ Set up to Read all Data ------------------------------------------
 		
-		NetworkMaker networkMaker = new NetworkMaker("SelectedConnections");
-		//NetworkMaker networkMaker = new NetworkMaker("FullyConnected");
+		//NetworkMaker networkMaker = new NetworkMaker("SelectedConnections");
+		NetworkMaker networkMaker = new NetworkMaker("FullyConnected");
 		ArrayList<ArrayList<Double>> data = networkMaker.getInputData(false);
 		ArrayList<HashMap<Integer,int[]>> networkStructure = networkMaker.getSelectedConnectionsNetworkStructure(false);
 		ArrayList<HashMap<Integer,double[]>> networkStructureWeights = networkMaker.getSelectedConnectionsNetworkStructureWeights(false);
@@ -23,7 +23,7 @@ public class MLPMain {
 		MLNetwork network = new MLNetwork(data, networkStructure, networkStructureWeights, biasWeights, biasValues, learningRate, momentum);
 		//network.getNeurons(false);
 		int numberOfExamples = network.getNumberOfExamples(false);
-		numberOfExamples = 1; // Overwriting the number of examples here
+		//numberOfExamples = 2; // Overwriting the number of examples here
 		boolean test1Layer = false; // if on, will only test 1 layer
 		boolean printInfo = false;
 		int layerToTest = 0; // set the layer to test.  -1 is the input layer
