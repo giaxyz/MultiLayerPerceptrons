@@ -45,16 +45,24 @@ public class MLNetwork {
 	
 	
 	
-	public void feedForward(int exampleIndex, boolean printInfo) {
+	public void feedForward(int exampleIndex, boolean printInfo, boolean test1Layer, int layerToTest) {
 		
 		if(printInfo){
 			
 			System.out.println("\n\t\t-----FeedingForward Example Index : " + exampleIndex);
 		}
 		
-			for(int i = -1; i<(getLayerIndices(false).size() -1); i++){
+		int maxLayer = -1;
+		if(test1Layer){
+			maxLayer = layerToTest + 1;
+		}else{
+			maxLayer = getLayerIndices(false).size() - 1;
+		}
+			
+			for(int i = -1; i<maxLayer; i++){
 				
 				int layerIndex = i;
+				
 				
 				if(printInfo){
 					System.out.print("\n");
@@ -68,21 +76,123 @@ public class MLNetwork {
 				feedForwardLayer(layerIndex, exampleIndex, false);
 				
 			}
+			
+	
+		
+			
 		}
 		
-	
-
-
 	private void feedForwardLayer(int layerIndex, int exampleIndex, boolean printInfo) {
 	
 		if(printInfo){
-			System.out.println("\t\t -- Current Example : " + exampleIndex);
+			
+			System.out.println("Feeding forward layer : " + layerIndex);
+			//System.out.println("\t\t -- Current Example : " + exampleIndex);
 		}
 		
 		ArrayList<Double> currentInputsX = getExample(exampleIndex, false);
+		setLayerNeuronInputs(currentInputsX, layerIndex, exampleIndex, false);
+		computeSumsinLayer(layerIndex, true);
+	}
+	
+	private void computeSumsinLayer(int layerIndex, boolean printInfo) {
 		
-		//setLayerNeuronInputs(layerIndex, exampleIndex);
-		//computeSumsinLayer(layerIndex);
+		System.out.println("Computing sums for layer ..." + layerIndex);
+		
+	}
+
+
+
+	private void setLayerNeuronInputs(ArrayList<Double> currentInputsX, int layerIndex, int exampleIndex, boolean printInfo){
+		
+		if(printInfo){
+			
+			System.out.println("Setting inputs for Layer : " + layerIndex);
+			
+		}
+			ArrayList<Perceptron> currentLayer = getLayerNeurons(layerIndex, false);
+			
+			
+			if(layerIndex == -1){ // If it is an input layer, it's a dummy neuron.  Set to inputs
+				
+				ArrayList<Double> inputLayerInputs = MlUtils.duplicateArrayList(currentInputsX);
+				
+				//System.out.println("\tRaw Inputs:" + inputLayerInputs);
+				
+				for(int j = 0; j< currentLayer.size(); j++){
+					
+					Perceptron neuron = currentLayer.get(j);
+					//System.out.println(" Input layer inputs " + inputLayerInputs);
+					double inputValue = inputLayerInputs.get(j);
+					//System.out.println("   at value : " + inputValue);
+				
+					// Since it's an Input Dummy Neuron,
+					// Set the output value to the Raw input X value
+					neuron.setOutput(inputValue);
+					neuron.setSum(inputValue);
+					neuron.getOutput(false);
+					neuron.getSum(false);
+					
+				}
+				
+			}else{
+				
+				
+				ArrayList<Perceptron> previousLayer = getLayerNeurons((layerIndex) - 1, false);
+				
+				if(printInfo){
+					
+					//System.out.println("Previous layer : " + previousLayer);
+				}
+				
+				for(int i = 0; i< currentLayer.size(); i++){
+					
+					ArrayList<Double> inputsForCurrentLayer = new ArrayList<Double>();
+					Perceptron neuron = currentLayer.get(i);
+					
+					for(int k = 0; k< previousLayer.size(); k++){
+						double currentNeuronOutput = previousLayer.get(k).getOutput(false);
+						inputsForCurrentLayer.add(currentNeuronOutput);
+					
+					}
+					
+					if(printInfo){
+						System.out.println("\tInputs for neuron : " + neuron + " " + inputsForCurrentLayer );
+					}
+					
+					double currentBiasValue = neuron.getBiasValue(false);
+					inputsForCurrentLayer.add(currentBiasValue);
+					neuron.setInputs(inputsForCurrentLayer);
+					neuron.getInputs(false);
+					
+				}
+				
+				
+			}
+		
+	}
+	
+	public ArrayList<Perceptron> getLayerNeurons(int layerIndex, boolean printInfo){
+		
+		ArrayList<Perceptron> currentLayer = new ArrayList<Perceptron>();
+
+		for(int i = 0; i<this.allNeurons.size(); i++){
+			
+			Perceptron currentPerceptron = allNeurons.get(i);
+			int currentPerceptronLayer = currentPerceptron.getLayerID(false);
+			
+			if(currentPerceptronLayer == layerIndex){
+				currentLayer.add(currentPerceptron);
+			}
+			
+		}
+		
+		if(printInfo){
+			System.out.println("Current Layer Neurons in Layer : " + layerIndex + " : ");
+			System.out.println("\t\t" + currentLayer);
+		}
+		
+		return currentLayer;
 	}
 	
 	public void createNetwork(boolean printInfo) throws Exception {
@@ -340,9 +450,6 @@ public class MLNetwork {
 		return this.inputData;
 	}
 	
-
-
-
 	public ArrayList<Double> getExample(int exampleIndex, boolean printInfo){
 		
 		ArrayList<Double> currentRowInputs = new ArrayList<Double>();
@@ -364,8 +471,6 @@ public class MLNetwork {
 		
 		return currentRowInputs;
 	}
-
-
 
 	public int getNumberOfExamples(boolean printInfo) {
 		

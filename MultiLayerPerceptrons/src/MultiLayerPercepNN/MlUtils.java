@@ -1,5 +1,6 @@
 package MultiLayerPercepNN;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -102,4 +103,14 @@ public class MlUtils {
        
 	}
 
+	public static ArrayList<Double> duplicateArrayList(ArrayList<Double> originalList){
+		
+		ArrayList<Double> newList = new ArrayList<Double>();
+		for(int i = 0; i< originalList.size(); i++){
+			newList.add(originalList.get(i));
+		}
+		
+		return newList;
+		
+	}
 }

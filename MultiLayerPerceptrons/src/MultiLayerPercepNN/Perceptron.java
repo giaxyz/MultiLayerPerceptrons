@@ -22,6 +22,7 @@ public class Perceptron {
 	private int[] neuronConnections;
 	private double[] neuronWeights;
 	private ArrayList<ArrayList<Double>> inputData;
+	private ArrayList<Double> inputs;
 	
 	
 	
@@ -41,6 +42,7 @@ public class Perceptron {
 		this.neuronConnections = neuronConnections;
 		this.neuronWeights = neuronWeights;
 		this.inputData = inputData;
+		this.inputs = new ArrayList<Double>();
 		
 		this.sum = Double.NEGATIVE_INFINITY;
 		this.betaError = Double.POSITIVE_INFINITY;
@@ -82,12 +84,12 @@ public class Perceptron {
 		return this.isOutput;
 	}
 	
-	private void setSum(double sum){
+	public void setSum(double sum){
 		
 		this.sum = sum;
 	}
 	
-	private double getSum(boolean printInfo){
+	public double getSum(boolean printInfo){
 		
 		if(printInfo){
 			System.out.println("Sum for " + this.neuronDetails + " : " + this.sum);
@@ -170,6 +172,22 @@ public class Perceptron {
 	
 	public String toString(){
 		return this.neuronDetails;
+	}
+	
+
+	public void setInputs(ArrayList<Double> inputs) {
+		
+		this.inputs = inputs;
+		
+	}
+
+	public ArrayList<Double> getInputs(boolean printInfo) {
+		
+		if(printInfo){
+			System.out.println("Inputs for Neuron " + neuronDetails + " : " + this.inputs);
+		}
+		return this.inputs;
+		
 	}
 
 }
