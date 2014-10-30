@@ -20,18 +20,20 @@ public class MLPMain {
 		HashMap<Integer, Double> biasValues = networkMaker.getBiasValues(false);
 		
 		// Create the network
-		MLNetwork network = new MLNetwork(data, networkStructure, networkStructureWeights, biasWeights, biasValues, learningRate, momentum);
+		boolean printFeedForward = true;
+		MLNetwork network = new MLNetwork(data, networkStructure, networkStructureWeights, biasWeights, biasValues, learningRate, momentum, printFeedForward);
 		//network.getNeurons(false);
 		int numberOfExamples = network.getNumberOfExamples(false);
-		//numberOfExamples = 2; // Overwriting the number of examples here
+		numberOfExamples = 1; // Overwriting the number of examples here
 		boolean test1Layer = false; // if on, will only test 1 layer
 		boolean printInfo = false;
+		
 		int layerToTest = 0; // set the layer to test.  -1 is the input layer
 		int numberOfEpochs = 1;
 		
 		for(int i = 0; i< numberOfEpochs; i++){
 			
-			//System.out.println(" \n ---- Training, epoch number : " + i + " ------- ");
+			System.out.println(" \n\n\n -------Begin Training, epoch number : " + i + " -------\n\n ");
 			
 			for(int j = 0; j<numberOfExamples; j++ ){
 				

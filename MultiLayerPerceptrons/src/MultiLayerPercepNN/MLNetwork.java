@@ -16,6 +16,7 @@ public class MLNetwork {
 	private double momentum;
 	private ArrayList<Perceptron> allNeurons;
 	private ArrayList<Integer> allLayers;
+	private boolean printFeedForwardDetails;
 	
 	
 	public MLNetwork(
@@ -26,9 +27,11 @@ public class MLNetwork {
 			HashMap<Integer, Double> biasWeights,
 			HashMap<Integer, Double> biasValues,
 			double learningRate,
-			double momentum
+			double momentum,
+			boolean printFeedForward
 			) throws Exception{
 		
+		this.printFeedForwardDetails = printFeedForward;
 		this.allLayers = new ArrayList<Integer>();
 		this.inputData = inputData;
 		this.networkStructure = networkStructure;
@@ -85,31 +88,31 @@ public class MLNetwork {
 		
 	private void feedForwardLayer(int layerIndex, int exampleIndex, boolean printInfo) throws Exception {
 	
-		if(printInfo){
+		if(this.printFeedForwardDetails){
 			
-			System.out.println("Feeding forward layer : " + layerIndex);
+			System.out.println("---------------------------------- Feeding forward layer : " + layerIndex);
 			//System.out.println("\t\t -- Current Example : " + exampleIndex);
 		}
 		
 		ArrayList<Double> currentInputsX = getExample(exampleIndex, false);
-		setLayerNeuronInputs(currentInputsX, layerIndex, exampleIndex, true);
-		computeSumsinLayer(layerIndex, false);
+		setLayerNeuronInputs(currentInputsX, layerIndex, exampleIndex, this.printFeedForwardDetails);
+		computeSumsinLayer(layerIndex, this.printFeedForwardDetails);
 	}
 	
 	private void computeSumsinLayer(int layerIndex, boolean printInfo) throws Exception {
 		
-		if(printInfo){
-			System.out.println("Computing sums for layer ..." + layerIndex);
-		}
 		
 		
 		ArrayList<Perceptron> layerNeurons = getLayerNeurons(layerIndex, false);
 		for(int i = 0; i< layerNeurons.size(); i++){
 			
 			Perceptron neuron = layerNeurons.get(i);
-			double sum = neuron.computeSum(false);
-			neuron.activateSigmoid(sum, true);
-			neuron.getOutput(true);
+			double sum = neuron.computeSum(this.printFeedForwardDetails);
+			neuron.activateSigmoid(sum, this.printFeedForwardDetails);
+			neuron.getOutput(this.printFeedForwardDetails);
+			if(this.printFeedForwardDetails){
+				System.out.println("\n\t\t-------");
+			}
 		}
 			
 
@@ -146,7 +149,12 @@ public class MLNetwork {
 				
 					neuron.setOutput(inputValue);
 					neuron.setSum(inputValue);
-					neuron.getOutput(false);
+					
+					if(this.printFeedForwardDetails){
+						System.out.print("Inputs set to : ");
+						neuron.getOutput(printFeedForwardDetails);
+					}
+					
 					neuron.getSum(false);
 					
 				}
@@ -159,7 +167,10 @@ public class MLNetwork {
 					
 					ArrayList<Double> inputsForCurrentNeuron = new ArrayList<Double>();
 					Perceptron neuron = currentLayer.get(i);
-					System.out.println("CurrentNeuron: " + neuron);
+					if(this.printFeedForwardDetails){
+						System.out.println("\nCurrent Neuron: " + neuron);
+					}
+					
 					int layerHashMapIndex = layerIndex + 1; // because the first array is the inputs at -1
 					//System.out.print("    -- at layer : " + layerHashMapIndex + "\n");
 					int[] neuronConnectedNeurons = getNetworkStructure(false).get(layerHashMapIndex).get(neuron.getNeuronID(false));
@@ -178,7 +189,10 @@ public class MLNetwork {
 					inputsForCurrentNeuron.add(currentBiasValue);
 					//System.out.println("\t\t "+ inputsForCurrentNeuron);
 					neuron.setInputs(inputsForCurrentNeuron);
-					neuron.getInputs(true);
+					if(this.printFeedForwardDetails){
+						System.out.print("\t\t");
+					}
+					neuron.getInputs(this.printFeedForwardDetails);
 				}
 				
 			}

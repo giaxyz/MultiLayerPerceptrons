@@ -219,11 +219,14 @@ public class Perceptron {
 		
 		if(layerID != -1){
 			
-			System.out.println("Current neuron " + neuronDetails);
-			System.out.println("Inputs are " + inputs);
-			for(int i = 0; i< neuronWeights.length; i++){
-				System.out.println(" W " + neuronWeights[i]);
+			if(printInfo){
+				System.out.println("Current neuron " + neuronDetails);
+				System.out.println("Inputs are " + inputs);
+				for(int i = 0; i< neuronWeights.length; i++){
+					System.out.println(" W " + neuronWeights[i]);
+				}
 			}
+			
 			
 			sum = 0.0;
 			if(inputs.size() != neuronWeights.length){
@@ -281,7 +284,7 @@ public class Perceptron {
 		
 		if(printInfo){
 			
-		System.out.println("Activating " + neuronDetails +  " " +  sumValue);
+		System.out.println("\t\tActivating " + neuronDetails +  " " +  sumValue);
 			System.out.println("\t\tThreshold : " + finalSigmoidVal);
 			if(isInput){
 				System.out.print("\t\t\tno activation because it's an input dummy neuron");
