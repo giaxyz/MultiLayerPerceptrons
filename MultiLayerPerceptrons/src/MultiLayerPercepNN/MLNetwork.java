@@ -15,6 +15,8 @@ public class MLNetwork {
 	private double learningRate;
 	private double momentum;
 	private ArrayList<Perceptron> allNeurons;
+	private ArrayList<Integer> allLayers;
+	
 	
 	public MLNetwork(
 			
@@ -27,6 +29,7 @@ public class MLNetwork {
 			double momentum
 			) throws Exception{
 		
+		this.allLayers = new ArrayList<Integer>();
 		this.inputData = inputData;
 		this.networkStructure = networkStructure;
 		this.networkWeights = networkWeights;
@@ -40,11 +43,55 @@ public class MLNetwork {
 		
 	}
 	
+	
+	
+	public void feedForward(int exampleIndex, boolean printInfo) {
+		
+		if(printInfo){
+			
+			System.out.println("\n\t\t-----FeedingForward Example Index : " + exampleIndex);
+		}
+		
+			for(int i = -1; i<(getLayerIndices(false).size() -1); i++){
+				
+				int layerIndex = i;
+				
+				if(printInfo){
+					System.out.print("\n");
+					System.out.print("\t ---- at layer : " + layerIndex);
+					if(layerIndex == -1){
+						System.out.print("  // where -1 indicates Input Layer");
+					}
+					System.out.print("\n\n\n");
+				}
+				
+				feedForwardLayer(layerIndex, exampleIndex, false);
+				
+			}
+		}
+		
+	
+
+
+	private void feedForwardLayer(int layerIndex, int exampleIndex, boolean printInfo) {
+	
+		if(printInfo){
+			System.out.println("\t\t -- Current Example : " + exampleIndex);
+		}
+		
+		ArrayList<Double> currentInputsX = getExample(exampleIndex, false);
+		
+		//setLayerNeuronInputs(layerIndex, exampleIndex);
+		//computeSumsinLayer(layerIndex);
+	}
+	
 	public void createNetwork(boolean printInfo) throws Exception {
 		
 		for(int i = 0; i< this.networkStructure.size(); i++){
 			
 			HashMap<Integer,int[]> currentLayer= networkStructure.get(i);
+			
+			
 			Iterator<Map.Entry<Integer, int[]>> iterator = currentLayer.entrySet().iterator() ;
 			
 			while(iterator.hasNext()){
@@ -73,6 +120,10 @@ public class MLNetwork {
 						this.inputData);
 				
 			}
+			
+			int layerIndex = (i - 1);
+			allLayers.add(layerIndex);
+			
 		}
       
 	}
@@ -271,6 +322,61 @@ public class MLNetwork {
 			System.out.println("\nCurrent Momentum : " + this.momentum);
 		}
 		return this.momentum;
+		
+	}
+
+	public ArrayList<Integer> getLayerIndices(boolean printInfo){
+		if(printInfo){
+			System.out.println("Network Layer Indices, where -1 indicates input layer : " + this.allLayers );
+		}
+		return this.allLayers;
+	}
+	
+	public ArrayList<ArrayList<Double>> getInputData(boolean printInfo){
+		
+		if(printInfo){
+			System.out.println("NMaker Input data is :" + this.inputData);
+		}
+		return this.inputData;
+	}
+	
+
+
+
+	public ArrayList<Double> getExample(int exampleIndex, boolean printInfo){
+		
+		ArrayList<Double> currentRowInputs = new ArrayList<Double>();
+		for(int i = 0; i< (this.inputData.size()-1); i++){ // we minus 1 here because the last one is the output Y column
+			
+			ArrayList<Double> currentColumnInputs = this.inputData.get(i);
+			currentRowInputs.add(currentColumnInputs.get(exampleIndex));
+			
+			if(printInfo){
+				System.out.println("Data at column : " + i + " "+ currentColumnInputs);
+			}
+			
+		}
+		
+		if(printInfo){
+			System.out.println("   extracted data at row : " + exampleIndex + " " + currentRowInputs);
+			System.out.println("\n");
+		}
+		
+		return currentRowInputs;
+	}
+
+
+
+	public int getNumberOfExamples(boolean printInfo) {
+		
+		ArrayList<Double> firstInputData = getInputData(false).get(0);
+		int numberOfExamples = firstInputData.size();
+		
+		if(printInfo){
+			System.out.println("Number of egs in input Data :  " + numberOfExamples );
+		}
+		
+		return numberOfExamples;
 		
 	}
 }

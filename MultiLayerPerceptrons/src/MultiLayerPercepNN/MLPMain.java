@@ -7,8 +7,6 @@ public class MLPMain {
 
 	public static void main(String[] args) throws Exception {
 		
-		
-		
 		//   ------------ Set up to Read all Data ------------------------------------------
 		
 		//NetworkMaker networkMaker = new NetworkMaker("SelectedConnections");
@@ -24,6 +22,27 @@ public class MLPMain {
 		// Create the network
 		MLNetwork network = new MLNetwork(data, networkStructure, networkStructureWeights, biasWeights, biasValues, learningRate, momentum);
 		network.getNeurons(true);
+		int numberOfExamples = network.getNumberOfExamples(false);
+		numberOfExamples = 1; // Overwriting the number of examples here
+		int numberOfEpochs = 1;
+		
+		for(int i = 0; i< numberOfEpochs; i++){
+			
+			//System.out.println(" \n ---- Training, epoch number : " + i + " ------- ");
+			
+			for(int j = 0; j<numberOfExamples; j++ ){
+				
+				network.feedForward(j, false);
+				
+				// -- To DO -----------
+				//System.out.println("\t\t Backpropagating");
+				//System.out.println("\t\t\t\t Beta Errors : ");
+			}
+			
+			
+			
+		}
+		
 		
 	}
 
