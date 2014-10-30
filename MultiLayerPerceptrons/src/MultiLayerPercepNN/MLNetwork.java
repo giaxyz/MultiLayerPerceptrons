@@ -45,7 +45,7 @@ public class MLNetwork {
 	
 	
 	
-	public void feedForward(int exampleIndex, boolean printInfo, boolean test1Layer, int layerToTest) {
+	public void feedForward(int exampleIndex, boolean printInfo, boolean test1Layer, int layerToTest) throws Exception {
 		
 		if(printInfo){
 			
@@ -82,7 +82,7 @@ public class MLNetwork {
 			
 		}
 		
-	private void feedForwardLayer(int layerIndex, int exampleIndex, boolean printInfo) {
+	private void feedForwardLayer(int layerIndex, int exampleIndex, boolean printInfo) throws Exception {
 	
 		if(printInfo){
 			
@@ -91,17 +91,31 @@ public class MLNetwork {
 		}
 		
 		ArrayList<Double> currentInputsX = getExample(exampleIndex, false);
-		setLayerNeuronInputs(currentInputsX, layerIndex, exampleIndex, false);
-		computeSumsinLayer(layerIndex, true);
+		setLayerNeuronInputs(currentInputsX, layerIndex, exampleIndex, true);
+		//computeSumsinLayer(layerIndex, false);
 	}
+	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	private void computeSumsinLayer(int layerIndex, boolean printInfo) throws Exception {
+		
+		if(printInfo){
+			System.out.println("Computing sums for layer ..." + layerIndex);
+		}
+		
+		
+		ArrayList<Perceptron> layerNeurons = getLayerNeurons(layerIndex, false);
+		for(int i = 0; i< layerNeurons.size(); i++){
+			
+			Perceptron neuron = layerNeurons.get(i);
+			double sum = neuron.computeSum(false);
+			//neuron.activateSigmoid(sum, true);
+			//neuron.getOutputValue(true);
+		}
+			
+
 	
-	private void computeSumsinLayer(int layerIndex, boolean printInfo) {
-		
-		System.out.println("Computing sums for layer ..." + layerIndex);
+
 		
 	}
-
-
 
 	private void setLayerNeuronInputs(ArrayList<Double> currentInputsX, int layerIndex, int exampleIndex, boolean printInfo){
 		
@@ -128,6 +142,7 @@ public class MLNetwork {
 				
 					// Since it's an Input Dummy Neuron,
 					// Set the output value to the Raw input X value
+				
 					neuron.setOutput(inputValue);
 					neuron.setSum(inputValue);
 					neuron.getOutput(false);
@@ -135,37 +150,37 @@ public class MLNetwork {
 					
 				}
 				
-			}else{
+			}else{ ////!!!!!!!!!1 Otherwise, find out from the hash map, what the connections are
 				
+				System.out.println("Setting inputs for Layer" + layerIndex);
+//				ArrayList<Perceptron> previousLayer = getLayerNeurons((layerIndex) - 1, false);
+//				
+//				if(printInfo){
+//					
+//					//System.out.println("Previous layer : " + previousLayer);
+//				}
 				
-				ArrayList<Perceptron> previousLayer = getLayerNeurons((layerIndex) - 1, false);
-				
-				if(printInfo){
-					
-					//System.out.println("Previous layer : " + previousLayer);
-				}
-				
-				for(int i = 0; i< currentLayer.size(); i++){
-					
-					ArrayList<Double> inputsForCurrentLayer = new ArrayList<Double>();
-					Perceptron neuron = currentLayer.get(i);
-					
-					for(int k = 0; k< previousLayer.size(); k++){
-						double currentNeuronOutput = previousLayer.get(k).getOutput(false);
-						inputsForCurrentLayer.add(currentNeuronOutput);
-					
-					}
-					
-					if(printInfo){
-						System.out.println("\tInputs for neuron : " + neuron + " " + inputsForCurrentLayer );
-					}
-					
-					double currentBiasValue = neuron.getBiasValue(false);
-					inputsForCurrentLayer.add(currentBiasValue);
-					neuron.setInputs(inputsForCurrentLayer);
-					neuron.getInputs(false);
-					
-				}
+//				for(int i = 0; i< currentLayer.size(); i++){
+//					
+//					ArrayList<Double> inputsForCurrentLayer = new ArrayList<Double>();
+//					Perceptron neuron = currentLayer.get(i);
+//					
+//					for(int k = 0; k< previousLayer.size(); k++){
+//						double currentNeuronOutput = previousLayer.get(k).getOutput(false);
+//						inputsForCurrentLayer.add(currentNeuronOutput);
+//					
+//					}
+//					
+//					if(printInfo){
+//						System.out.println("\tInputs for neuron : " + neuron + " " + inputsForCurrentLayer );
+//					}
+//					
+//					double currentBiasValue = neuron.getBiasValue(false);
+//					inputsForCurrentLayer.add(currentBiasValue);
+//					neuron.setInputs(inputsForCurrentLayer);
+//					neuron.getInputs(false);
+//					
+//				}
 				
 				
 			}
@@ -214,8 +229,9 @@ public class MLNetwork {
 				boolean isInput = getIsInput(neuronID, false);
 				boolean isOutput = getIsOutput(neuronID, layerID, false);
 				int[] neuronConnections = mapEnt.getValue();
-				double[] neuronWeightsMap = getNeuronWeights(neuronID, layerID, false);
-				
+				double[] neuronWeightsMapWithoutBias = getNeuronWeights(neuronID, layerID, false);
+				double[] neuronWeightsMap = MlUtils.addDoubleToArray(neuronWeightsMapWithoutBias, neuronBiasValue);
+			
 				//System.out.print("\nNeuron" + neuronID + " Connections are : " );
 				//MlUtils.printIntArray(neuronConnections);
 				

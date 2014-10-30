@@ -2,7 +2,6 @@ package MultiLayerPercepNN;
 
 import java.util.ArrayList;
 
-
 public class Perceptron {
 	
 
@@ -189,5 +188,109 @@ public class Perceptron {
 		return this.inputs;
 		
 	}
+	
 
+	public double computeSum(boolean printInfo) throws Exception {
+		
+		if(printInfo){
+			
+			System.out.println("\n-------Computing Sum For " + neuronDetails);
+		}
+		
+		
+		double sum = getSum(false);
+		
+		if(layerID == -1){
+			if(this.sum == Double.NEGATIVE_INFINITY){
+				throw new Exception("The inputs for the dummy input neurons not set properly");
+			}
+		}
+		
+		if((inputs.isEmpty()) && this.layerID != -1){
+			throw new Exception("The input array for N" + neuronID + "_L" + layerID + " is Empty");
+		}
+		
+		if(printInfo){
+			System.out.println("\t Inputs are : " + inputs);
+			System.out.print("\t Weights are : ");
+			MlUtils.printDoubleArray(neuronWeights);
+			System.out.print("\n");
+		}
+		
+		if(layerID != -1){
+			
+			System.out.println("Current neuron " + neuronDetails);
+			System.out.println("Inputs are " + inputs);
+			for(int i = 0; i< neuronWeights.length; i++){
+				System.out.println(" W " + neuronWeights[i]);
+			}
+			
+			sum = 0.0;
+			if(inputs.size() != neuronWeights.length){
+				throw new Exception("N" + neuronID + "_L" + layerID + " weights and inputs matrices do not match");
+			}
+			
+			
+			
+			if(printInfo){
+				System.out.println("\t Sum for L_" + layerID + "_N_" + neuronID);
+			}
+			
+			for(int i = 0; i< inputs.size(); i++){
+				
+				double inputVal = inputs.get(i);
+				double weightVal = neuronWeights[i];
+				sum += (inputVal * weightVal);
+				
+				
+				if(printInfo){
+					System.out.println("\t\t Input : " + inputVal + " Weight " + weightVal);
+				}
+				
+			}
+			
+			if(printInfo){
+				
+				System.out.println("\tFinal sum " + sum);
+			}
+			
+			
+		}
+		
+		
+		this.sum = sum;
+		return sum;
+		
+	}
+
+	public double activateSigmoid(double sumValue, boolean printInfo){
+		
+		double finalSigmoidVal;
+		
+		if(!(isInput)){
+			
+			double thresholdVal =  1.0 / (1 + Math.exp(-1.0 * sumValue));
+			thresholdVal = MlUtils.formatDouble(thresholdVal);
+			
+			finalSigmoidVal = thresholdVal;
+		}else{
+			finalSigmoidVal = sumValue;
+		}
+			
+		setOutput(finalSigmoidVal); // set the output value, if it's not an input neuron
+		
+		if(printInfo){
+			
+		System.out.println("Activating " + neuronDetails +  " " +  sumValue);
+			System.out.println("\t\tThreshold : " + finalSigmoidVal);
+			if(isInput){
+				System.out.print("\t\t\tno activation because it's an input dummy neuron");
+			}
+		}
+		
+		return finalSigmoidVal;
+		
+	}
+
+	
 }

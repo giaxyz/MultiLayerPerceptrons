@@ -113,4 +113,35 @@ public class MlUtils {
 		return newList;
 		
 	}
+
+	public static double[] addDoubleToArray(double[] doubleArray,
+			double doubleVal) {
+		
+		double newDouble[] = null;
+		
+		if(doubleArray == null){
+			return null;
+		}else{
+			
+			newDouble = new double[doubleArray.length + 1];
+			
+			
+			for(int i = 0; i< doubleArray.length; i++){
+				newDouble[i] = doubleArray[i];
+			}
+			
+			newDouble[doubleArray.length] = doubleVal;
+		
+		}
+			
+		return newDouble;
+	}
+
+	// Format Doubles
+	public static double formatDouble(double doubleNum){
+				
+				double roundedNum = (double)Math.round(doubleNum * 10000) / 10000;
+				return roundedNum;
+	}
+
 }
