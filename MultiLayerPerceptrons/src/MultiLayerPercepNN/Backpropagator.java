@@ -17,7 +17,7 @@ public class Backpropagator {
 		
 		this.network = network;
 		this.networkSize = network.getNetworkBiasValues(false).size();
-		this.test1Neuron = true; // set this to test only 1 layer, it will backprop from the out to the test neuron
+		this.test1Neuron = false; // set this to test only 1 layer, it will backprop from the out to the test neuron
 		this.neuronToTest = 3;
 		this.currentExample = 0;
 		this.printBackPropInfo = true;
@@ -45,7 +45,7 @@ public class Backpropagator {
 			}
 			
 			// compute the Beta Error for the Neuron
-			double betaError = computeBetaError(currentNeuron, false);
+			double betaError = computeBetaError(currentNeuron, true);
 			currentNeuron.setBetaError(betaError, false);
 			
 			if(printBackPropInfo){
@@ -168,11 +168,11 @@ public class Backpropagator {
 			derivative = betaSumsFromNextRow * neuronWeightToNextNeuron; 
 			
 			
-//			if(printInfo){
-//				
-//				System.out.println("(" + out + ") * ( 1 - " + out  + " ) * (" + derivative + ")");
-//				System.out.println("... where derivative is " + betaSumsFromNextRow + " + " + neuronWeightToNextNeuron);
-//			}
+			if(printInfo){
+				
+				System.out.println("(" + out + ") * ( 1 - " + out  + " ) * (" + derivative + ")");
+				System.out.println("... where derivative is " + betaSumsFromNextRow + " + " + neuronWeightToNextNeuron);
+			}
 			
 		}
 		
@@ -189,26 +189,35 @@ public class Backpropagator {
 	private double getCurrentNeuronWeightInputFromNextRow(Perceptron neuron, boolean printInfo){
 		
 		double neuronWeightToNextNeuron = Double.NEGATIVE_INFINITY;
+		int currentNeuronID = neuron.getNeuronID(false);
+		int currentNeuronLayerID = neuron.getLayerID(false);
+		int neuronLayerIdInHashMap = currentNeuronLayerID + 1;
+		HashMap<Integer, int[]> previousConnectedNeuronsHash = network.getNetworkStructureBackwards(false).get(neuronLayerIdInHashMap);
+		int[] previousConnectedNeurons = previousConnectedNeuronsHash.get(currentNeuronID);
 		
-//		int nextLayerIndex = (neuron.getLayerID(false)) + 1;
-//		ArrayList<Perceptron> nextLayer = network.getLayer(nextLayerIndex, false);
-//	
-//		for(int i = 0; i< nextLayer.size(); i++){
-//			
-//			Perceptron currentNeuronInNextLayer = nextLayer.get(i);
-//			ArrayList<Double> nextLayerWeights = currentNeuronInNextLayer.getInputWeightsRow(false);
-//			int neuronID = neuron.getNeuronID(false);
-//			neuronWeightToNextNeuron = nextLayerWeights.get(neuronID);
-//			
-//			if(printInfo){
-//				
-//				System.out.println(neuron + " weight into next neuron " + currentNeuronInNextLayer + " : " + neuronWeightToNextNeuron);
-//			}
-//			
-//			
-//		}
+		for(int i = 0; i< previousConnectedNeurons.length; i++){
+			
+			Perceptron currentNeuron = network.getSingleNeuron(previousConnectedNeurons[i], false);
+			
+			System.out.println("\n\n");
+			System.out.println("Need weight for " + neuron + " to " + currentNeuron);
+			
+			int[] connections = currentNeuron.getNeuronConnections(false);
+			double[] weights = currentNeuron.getInputWeightsRow(false);
+			int indexOfWeight = 100;
+			
+			for(int j = 0; j<connections.length; j++){
+				
+				if(neuron.getNeuronID(false) == connections[j]){
+					indexOfWeight = j;
+				}
+			}
+			
 		
-	
+			
+			neuronWeightToNextNeuron = weights[indexOfWeight];
+		}
+		
 		return neuronWeightToNextNeuron;
 	}	
 	

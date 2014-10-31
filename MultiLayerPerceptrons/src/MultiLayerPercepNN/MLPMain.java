@@ -9,12 +9,12 @@ public class MLPMain {
 		
 		//   ------------ Set up to Read all Data ------------------------------------------
 		
-		//NetworkMaker networkMaker = new NetworkMaker("SelectedConnections");
-		NetworkMaker networkMaker = new NetworkMaker("FullyConnected");
+		NetworkMaker networkMaker = new NetworkMaker("SelectedConnections");
+		//NetworkMaker networkMaker = new NetworkMaker("FullyConnected");
 		ArrayList<ArrayList<Double>> data = networkMaker.getInputData(false);
-		ArrayList<Double> outputs = networkMaker.getOutputs(true);
+		ArrayList<Double> outputs = networkMaker.getOutputs(false);
 		ArrayList<HashMap<Integer,int[]>> networkStructure = networkMaker.getSelectedConnectionsNetworkStructure(false);
-		ArrayList<HashMap<Integer,int[]>> networkStructureBackwards = networkMaker.getSelectedConnectionsNetworkStructureBackwards(true);
+		ArrayList<HashMap<Integer,int[]>> networkStructureBackwards = networkMaker.getSelectedConnectionsNetworkStructureBackwards(false);
 		ArrayList<HashMap<Integer,double[]>> networkStructureWeights = networkMaker.getSelectedConnectionsNetworkStructureWeights(false);
 		double learningRate = networkMaker.getLearningRate(false);
 		double momentum = networkMaker.getMomentum(false);
@@ -23,13 +23,14 @@ public class MLPMain {
 		
 		
 		// Settings for Feed Forward
-		boolean printFeedForward = false;
+		boolean printFeedForward = true;
 		int numberOfEpochs = 1;
 		boolean test1Layer = false; // if on, will only test 1 layer
 		int layerToTest = 0; // set the layer to test.  -1 is the input layer
 		boolean printInfo = false;
-		MLNetwork network = new MLNetwork(data, outputs, networkStructure, 
-				networkStructureBackwards,networkStructureWeights, biasWeights, biasValues, 
+		MLNetwork network = new MLNetwork( biasWeights, biasValues, 
+				data, outputs, networkStructure, 
+				networkStructureBackwards,networkStructureWeights, 
 				learningRate, momentum, printFeedForward);
 		int numberOfExamples = network.getNumberOfExamples(false);
 		numberOfExamples = 1; // Overwriting the number of examples here

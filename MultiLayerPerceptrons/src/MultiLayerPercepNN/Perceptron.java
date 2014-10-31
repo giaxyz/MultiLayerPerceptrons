@@ -47,7 +47,8 @@ public class Perceptron {
 		this.betaError = Double.POSITIVE_INFINITY;
 		this.output = Double.NEGATIVE_INFINITY; 
 		this.deltaRow = new ArrayList<Double>(); 
-	
+		
+		
 		
 	}
 	
@@ -60,6 +61,8 @@ public class Perceptron {
 		if(printInfo){
 			System.out.println("Delta Values set to : " + deltaValues);
 		}
+		
+		
 		
 	}
 	
@@ -227,6 +230,8 @@ public class Perceptron {
 			System.out.print("\n");
 		}
 		
+		
+		
 		if(layerID != -1){
 			
 			if(printInfo){
@@ -325,7 +330,40 @@ public class Perceptron {
 		return this.isOutput;
 	}
 	
+	public void troubleshoot(){
+		
+		System.out.println(" \n-----Troubleshooting ---: Weights, " + this.neuronDetails);
+		for(int i = 0; i< this.neuronWeights.length; i++){
+			System.out.println(neuronWeights[i]);
+		}
+		
+		System.out.println(" \n-----Troubleshooting ---: INputs, " + this.neuronDetails);
+		for(int i = 0; i< this.inputs.size(); i++){
+			System.out.println(inputs.get(i));
+		}
+	}
 
+	public double[] getInputWeightsRow(boolean printInfo) {
+		
+		if(printInfo){
+			System.out.println("WeightsRow for Neuron " + neuronID + " in Layer " + layerID + " is : ");
+			for(int i = 0; i< this.neuronWeights.length; i++){
+				System.out.println(" Weight " + i + " is " + this.neuronWeights[i]);
+			}
+		}
+		return this.neuronWeights;
+	
+	}
 
+	public int[] getNeuronConnections(boolean printInfo){
+		
+		if(printInfo){
+			System.out.println("Connections for Neuron " + neuronID + " in Layer " + layerID + " is : ");
+			for(int i = 0; i< this.neuronConnections.length; i++){
+				System.out.println(" Connection # " + i + " is " + this.neuronConnections[i]);
+			}
+		}
+		return this.neuronConnections;
+	}
 	
 }

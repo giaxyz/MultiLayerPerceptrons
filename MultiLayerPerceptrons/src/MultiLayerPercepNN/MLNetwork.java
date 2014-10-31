@@ -22,14 +22,13 @@ public class MLNetwork {
 	
 	
 	public MLNetwork(
-			
+			HashMap<Integer, Double> biasWeights,
+			HashMap<Integer, Double> biasValues,
 			ArrayList<ArrayList<Double>> inputData,
 			ArrayList<Double> outputs,
 			ArrayList<HashMap<Integer,int[]>> networkStructure,
 			ArrayList<HashMap<Integer,int[]>> networkStructureBackwards,
 			ArrayList<HashMap<Integer,double[]>> networkWeights,
-			HashMap<Integer, Double> biasWeights,
-			HashMap<Integer, Double> biasValues,
 			double learningRate,
 			double momentum,
 			boolean printFeedForward
@@ -269,7 +268,7 @@ public class MLNetwork {
 				boolean isOutput = getIsOutput(neuronID, layerID, false);
 				int[] neuronConnections = mapEnt.getValue();
 				double[] neuronWeightsMapWithoutBias = getNeuronWeights(neuronID, layerID, false);
-				double[] neuronWeightsMap = MlUtils.addDoubleToArray(neuronWeightsMapWithoutBias, neuronBiasValue);
+				double[] neuronWeightsMap = MlUtils.addDoubleToArray(neuronWeightsMapWithoutBias, neuronBiasWeight);
 			
 				//System.out.print("\nNeuron" + neuronID + " Connections are : " );
 				//MlUtils.printIntArray(neuronConnections);
@@ -386,8 +385,8 @@ public class MLNetwork {
 			boolean isOutput,
 			int[] neuronConnections,
 			double[] neuronWeights,
-			double biasValue, 
 			double biasWeight,
+			double biasValue,
 			ArrayList<ArrayList<Double>> inputData){
 		
 		Perceptron neuron = new Perceptron(
