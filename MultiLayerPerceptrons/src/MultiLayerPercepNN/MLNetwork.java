@@ -576,4 +576,8 @@ public class MLNetwork {
 		}
 		return this.learningRate;
 	}
+
+
+
+
 }

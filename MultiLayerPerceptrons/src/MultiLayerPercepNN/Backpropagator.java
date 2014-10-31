@@ -98,21 +98,33 @@ public class Backpropagator {
 		int currentNeuronLayerID = neuron.getLayerID(false);
 		int neuronLayerIdInHashMap = currentNeuronLayerID + 1;
 		HashMap<Integer, int[]> previousConnectedNeuronsHash = network.getNetworkStructure(false).get(neuronLayerIdInHashMap);
-		//MlUtils.printHashMapIntIntArray(previousConnectedNeuronsHash);
 		int[] previousConnectedNeurons = previousConnectedNeuronsHash.get(currentNeuronID);
-	
 		
-		for(int i = 0; i< previousConnectedNeurons.length; i++){
+		
+		if(neuron.getIsInput()){
 			
-			int currentConnectedNeuron = previousConnectedNeurons[i];
-			Perceptron connectedNeuron = network.getSingleNeuron(currentConnectedNeuron, false);
-			double connectedNeuronOutput = connectedNeuron.getOutput(false);
-			previousLayerOutputs.add(connectedNeuronOutput);
+			int currentExample = this.currentExample;
+			ArrayList<Double> inputs = network.getExample(currentExample, false);
+			for(int i = 0; i< inputs.size(); i++){
+				previousLayerOutputs.add(inputs.get(i));
+			}
+			
+		}else{
+			
+			for(int i = 0; i< previousConnectedNeurons.length; i++){
+				
+				int currentConnectedNeuron = previousConnectedNeurons[i];
+				Perceptron connectedNeuron = network.getSingleNeuron(currentConnectedNeuron, false);
+				double connectedNeuronOutput = connectedNeuron.getOutput(false);
+				previousLayerOutputs.add(connectedNeuronOutput);
+				
+			}
+			
+			double currentNeuronBiasWeight = neuron.getBiasWeight(false);
+			previousLayerOutputs.add(currentNeuronBiasWeight);
 			
 		}
 		
-		double currentNeuronBiasWeight = neuron.getBiasWeight(false);
-		previousLayerOutputs.add(currentNeuronBiasWeight);
 		
 		if(printInfo){
 			System.out.println("PreviousLayer Outs (with 1.0 for bias) is : " + previousLayerOutputs);
@@ -128,7 +140,6 @@ public class Backpropagator {
 		double betaError = Double.NEGATIVE_INFINITY;
 		double derivative = Double.NEGATIVE_INFINITY;
 		double out = neuron.getOutput(printBackPropInfo);
-		int currentNeuronID = neuron.getNeuronID(false);
 		
 		if(neuron.getIsOutput()){
 		
@@ -139,8 +150,6 @@ public class Backpropagator {
 			
 			if(printBackPropInfo){
 				
-				//System.out.println("\t" + neuron + " is an output neuron");
-				//System.out.println("\tExpected Y : " + expectedY);
 				System.out.println("\tDerivative : " + derivative);
 			}
 			
@@ -166,8 +175,6 @@ public class Backpropagator {
 //			}
 			
 		}
-		
-		
 		
 		betaError = MlUtils.formatDouble((out * ( 1 - out ) * derivative));
 		
