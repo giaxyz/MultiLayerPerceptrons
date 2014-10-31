@@ -22,7 +22,7 @@ public class MLPMain {
 		
 		
 		// Settings for Feed Forward
-		boolean printFeedForward = true;
+		boolean printFeedForward = false;
 		int numberOfEpochs = 1;
 		boolean test1Layer = false; // if on, will only test 1 layer
 		int layerToTest = 0; // set the layer to test.  -1 is the input layer

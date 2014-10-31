@@ -3,6 +3,7 @@ package MultiLayerPercepNN;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 public class Backpropagator {
 
 	private MLNetwork network;
@@ -17,7 +18,7 @@ public class Backpropagator {
 		this.network = network;
 		this.networkSize = network.getNetworkBiasValues(false).size();
 		this.test1Neuron = true; // set this to test only 1 layer, it will backprop from the out to the test neuron
-		this.neuronToTest = 4;
+		this.neuronToTest = 3;
 		this.currentExample = 0;
 		this.printBackPropInfo = true;
 		
@@ -34,16 +35,16 @@ public class Backpropagator {
 		//Set the current Example
 		setCurrentExample(exampleNumber);
 		
-		// Now back propagate to the last neuron
+		// Now backpropagate from the last neuron to the first
 		for(int i = (this.networkSize - 1);  i>=lastNeuron; i--){
 		
 			Perceptron currentNeuron = this.network.getNeurons(false).get(i);
 			
 			if(printBackPropInfo){
-				System.out.println("-- Neuron " + currentNeuron + "-- : ");
+				System.out.println("\n\n\n-- Neuron " + currentNeuron + "-- : ");
 			}
 			
-			
+			// compute the Beta Error for the Neuron
 			double betaError = computeBetaError(currentNeuron, false);
 			currentNeuron.setBetaError(betaError, false);
 			
@@ -51,16 +52,20 @@ public class Backpropagator {
 				System.out.println("\t---" +  " betaError set to : " + betaError + "\n");
 			}
 			
+			// Compute the delta values for the neuron
 			ArrayList<Double> deltaValues = computeDeltaValues(currentNeuron, false);
 			currentNeuron.setDeltaRow(deltaValues, false);
 			
 			if(printBackPropInfo){
 				System.out.println("\t---" + " deltas set to : " + deltaValues);
+				
 			}
 			
 		}
 		
 	}
+	
+
 	
 	private ArrayList<Double> computeDeltaValues(Perceptron currentNeuron,
 			boolean printInfo) {
@@ -70,7 +75,7 @@ public class Backpropagator {
 		double betaValue = currentNeuron.getBetaError(false);
 		ArrayList<Double> previousLayerOutputs = getPreviousLayerOutput(currentNeuron, false);
 	
-		System.out.println("prev layer outs : " + previousLayerOutputs);
+		
 		
 		for(int i = 0; i< previousLayerOutputs.size(); i++){
 			
@@ -93,7 +98,7 @@ public class Backpropagator {
 		int currentNeuronLayerID = neuron.getLayerID(false);
 		int neuronLayerIdInHashMap = currentNeuronLayerID + 1;
 		HashMap<Integer, int[]> previousConnectedNeuronsHash = network.getNetworkStructure(false).get(neuronLayerIdInHashMap);
-		MlUtils.printHashMapIntIntArray(previousConnectedNeuronsHash);
+		//MlUtils.printHashMapIntIntArray(previousConnectedNeuronsHash);
 		int[] previousConnectedNeurons = previousConnectedNeuronsHash.get(currentNeuronID);
 	
 		
@@ -134,7 +139,7 @@ public class Backpropagator {
 			
 			if(printBackPropInfo){
 				
-				System.out.println("\t" + neuron + " is an output neuron");
+				//System.out.println("\t" + neuron + " is an output neuron");
 				//System.out.println("\tExpected Y : " + expectedY);
 				System.out.println("\tDerivative : " + derivative);
 			}
@@ -146,7 +151,20 @@ public class Backpropagator {
 			
 		}else{
 			
-			System.out.println(neuron + " is normal");
+			System.out.println("Computing Beta Error for Normal Neuron : " + neuron);
+			
+			//// -------   LINES OF CODE TO DECIPHER
+			double betaSumsFromNextRow = getBetaSumsFromNextRow(neuron, false);
+//			double neuronWeightToNextNeuron = getCurrentNeuronWeightInputFromNextRow(neuron, false);
+//			derivative = betaSumsFromNextRow * neuronWeightToNextNeuron; 
+//			
+//			
+//			if(printInfo){
+//				
+//				System.out.println("(" + out + ") * ( 1 - " + out  + " ) * (" + derivative + ")");
+//				System.out.println("... where derivative is " + betaSumsFromNextRow + " + " + neuronWeightToNextNeuron);
+//			}
+			
 		}
 		
 		
@@ -160,6 +178,34 @@ public class Backpropagator {
 		return betaError;
 		
 	}
+	
+	
+	private double getBetaSumsFromNextRow(Perceptron neuron, boolean printInfo) {
+		
+		double betaSumsFromNext = 0.0;
+		
+		network.getNetworkStructure(true);
+//		int nextLayerIndex = (neuron.getLayerID(false)) + 1;
+//		ArrayList<Perceptron> nextLayer = network.getLayer(nextLayerIndex, false);
+//		
+//		for(int i = 0; i< nextLayer.size(); i++){
+//			
+//			Perceptron currentNeuronInNextLayer = nextLayer.get(i);
+//			double currentNextBetaVal = currentNeuronInNextLayer.getBetaError(false);
+//			betaSumsFromNext += currentNextBetaVal;
+//		}
+		
+		if(printInfo){
+			System.out.println(neuron + " Beta Sum From next layer : " + betaSumsFromNext);
+		}
+		
+		return betaSumsFromNext;
+	}
+	
+	
+	
+	
+	
 	
 	public int getCurrentExample(boolean printInfo){
 		
