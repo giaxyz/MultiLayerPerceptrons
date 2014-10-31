@@ -51,7 +51,6 @@ public class Backpropagator {
 				System.out.println("\t---" +  " betaError set to : " + betaError + "\n");
 			}
 			
-			
 			ArrayList<Double> deltaValues = computeDeltaValues(currentNeuron, false);
 			currentNeuron.setDeltaRow(deltaValues, false);
 			

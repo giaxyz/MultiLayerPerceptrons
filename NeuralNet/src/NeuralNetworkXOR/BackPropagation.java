@@ -12,6 +12,7 @@ public class BackPropagation {
 		this.network = network;
 	}
 
+	// this sets beta and delta values
 	public void backPropagateLayer(int layerIndex, int exampleIndex) {
 
 		ArrayList<ArrayList<Neuron>> networkLayers = network.getNetworkLayers(false);
@@ -78,8 +79,56 @@ public class BackPropagation {
 				
 	}
 	
-	private ArrayList<Double> computeDeltaValues(Neuron currentNeuron, boolean printInfo) {
+	public double computeBetaError(Neuron neuron, boolean printInfo){
+		
+		double betaError = Double.NEGATIVE_INFINITY;
+		double derivative = Double.NEGATIVE_INFINITY;
+		double out = neuron.getOutputValue(false);
+		int currentNeuronID = neuron.getNeuronID(false);
+		
+		if(neuron.isOutput()){
+			
+			ArrayList<Double> outputs = network.getOutputsY(true).get(currentNeuronID);
+			double expectedY = outputs.get(network.getCurrentExample(false));
+			derivative = (expectedY - out);
+			
+			
+			if(printInfo){
+				
+				System.out.println(" Output Neuron weights are : " ); // this is the key, start here
+				neuron.getInputWeightsRow(true);
+				
+			}
+			
+			
+		}else{
+			
+			
+			double betaSumsFromNextRow = getBetaSumsFromNextRow(neuron, false);
+			double neuronWeightToNextNeuron = getCurrentNeuronWeightInputFromNextRow(neuron, false);
+			derivative = betaSumsFromNextRow * neuronWeightToNextNeuron; 
+			
+			
+			if(printInfo){
+				
+				System.out.println("(" + out + ") * ( 1 - " + out  + " ) * (" + derivative + ")");
+				System.out.println("... where derivative is " + betaSumsFromNextRow + " + " + neuronWeightToNextNeuron);
+			}
+			
+			
+		}
+		
+		betaError = NNUtilities.formatDouble((out * ( 1 - out ) * derivative));
+		
+		if(printInfo){
+			System.out.println("\t" + neuron + " beta error set to : " + betaError);
+		}
+		
+		return betaError;
+	}
 
+	private ArrayList<Double> computeDeltaValues(Neuron currentNeuron, boolean printInfo) {
+	
 		ArrayList<Double> deltaValues = new ArrayList<Double>();
 		double learningRate = network.getLearningRate();
 		double betaValue = currentNeuron.getBetaError(false);
@@ -87,6 +136,7 @@ public class BackPropagation {
 		
 		for(int i = 0; i< previousLayerOutputs.size(); i++){
 		
+			printInfo = false;
 			if(printInfo){
 				System.out.println("\t---Computing for " + currentNeuron + "(" + learningRate + ") * (" + betaValue + ")" + " * (" + previousLayerOutputs.get(i) + ")\n");
 			}
@@ -133,54 +183,6 @@ public class BackPropagation {
 		}
 		
 		return previousLayerOuts;
-	}
-
-	public double computeBetaError(Neuron neuron, boolean printInfo){
-		
-		double betaError = Double.NEGATIVE_INFINITY;
-		double derivative = Double.NEGATIVE_INFINITY;
-		double out = neuron.getOutputValue(false);
-		int currentNeuronID = neuron.getNeuronID(false);
-		
-		if(neuron.isOutput()){
-			
-			ArrayList<Double> outputs = network.getOutputsY(false).get(currentNeuronID);
-			double expectedY = outputs.get(network.getCurrentExample(false));
-			derivative = (expectedY - out);
-			
-			
-			if(printInfo){
-				
-				System.out.println(" Output Neuron weights are : " ); // this is the key, start here
-				neuron.getInputWeightsRow(true);
-				
-			}
-			
-			
-		}else{
-			
-			
-			double betaSumsFromNextRow = getBetaSumsFromNextRow(neuron, false);
-			double neuronWeightToNextNeuron = getCurrentNeuronWeightInputFromNextRow(neuron, false);
-			derivative = betaSumsFromNextRow * neuronWeightToNextNeuron; 
-			
-			
-			if(printInfo){
-				
-				System.out.println("(" + out + ") * ( 1 - " + out  + " ) * (" + derivative + ")");
-				System.out.println("... where derivative is " + betaSumsFromNextRow + " + " + neuronWeightToNextNeuron);
-			}
-			
-			
-		}
-		
-		betaError = NNUtilities.formatDouble((out * ( 1 - out ) * derivative));
-		
-		if(printInfo){
-			System.out.println("\t" + neuron + " beta error set to : " + betaError);
-		}
-		
-		return betaError;
 	}
 
 	private double getCurrentNeuronWeightInputFromNextRow(Neuron neuron, boolean printInfo){
