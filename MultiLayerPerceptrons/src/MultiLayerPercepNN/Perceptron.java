@@ -294,6 +294,23 @@ public class Perceptron {
 		return finalSigmoidVal;
 		
 	}
+	
+	public double setBetaError(double betaError, boolean printInfo){
+		
+		this.betaError = betaError;
+		
+		if(printInfo){
+			System.out.println("\t" + neuronDetails + " betaError new value " + this.betaError);
+		}
+		
+		return this.betaError;
+		
+	}
+	
+	public boolean getIsInput(){
+		return this.isInput;
+	}
+	
 
 	
 }

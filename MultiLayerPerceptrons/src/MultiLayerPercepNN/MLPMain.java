@@ -27,6 +27,8 @@ public class MLPMain {
 		numberOfExamples = 1; // Overwriting the number of examples here
 		boolean test1Layer = false; // if on, will only test 1 layer
 		boolean printInfo = false;
+		int bpLayerToTest = 2;
+		
 		
 		int layerToTest = 0; // set the layer to test.  -1 is the input layer
 		int numberOfEpochs = 1;
@@ -38,13 +40,10 @@ public class MLPMain {
 			for(int j = 0; j<numberOfExamples; j++ ){
 				
 				network.feedForward(j, printInfo, test1Layer, layerToTest);
-				
-				// -- To DO -----------
-				//System.out.println("\t\t Backpropagating");
-				//System.out.println("\t\t\t\t Beta Errors : ");
+				Backpropagator backpropagate = new Backpropagator(network);
+				backpropagate.backpropagate();
+			
 			}
-			
-			
 			
 		}
 		
