@@ -9,6 +9,7 @@ public class MLNetwork {
 	
 	private ArrayList<ArrayList<Double>> inputData;
 	private ArrayList<HashMap<Integer,int[]>> networkStructure;
+	private ArrayList<HashMap<Integer,int[]>> networkStructureBackwards;
 	private ArrayList<HashMap<Integer,double[]>> networkWeights;
 	private HashMap<Integer, Double> biasWeights;
 	private HashMap<Integer, Double> biasValues;
@@ -24,7 +25,8 @@ public class MLNetwork {
 			
 			ArrayList<ArrayList<Double>> inputData,
 			ArrayList<Double> outputs,
-			ArrayList<HashMap<Integer,int[]>> networkStructure, 
+			ArrayList<HashMap<Integer,int[]>> networkStructure,
+			ArrayList<HashMap<Integer,int[]>> networkStructureBackwards,
 			ArrayList<HashMap<Integer,double[]>> networkWeights,
 			HashMap<Integer, Double> biasWeights,
 			HashMap<Integer, Double> biasValues,
@@ -38,6 +40,7 @@ public class MLNetwork {
 		this.inputData = inputData;
 		this.outputs = outputs;
 		this.networkStructure = networkStructure;
+		this.networkStructureBackwards = networkStructureBackwards;
 		this.networkWeights = networkWeights;
 		this.biasWeights = biasWeights;
 		this.biasValues = biasValues;
@@ -474,6 +477,22 @@ public class MLNetwork {
 		return this.networkWeights;
 	}
 
+	public ArrayList<HashMap<Integer,int[]>> getNetworkStructureBackwards(boolean printInfo){
+		
+		if(printInfo){
+			
+			for(int i = 0; i<this.networkStructureBackwards.size(); i++){
+				
+				HashMap<Integer,int[]> currentNeuronConnectionsInfo = networkStructureBackwards.get(i);
+				System.out.println("\nNetwork Connections Layer " + (i-1) + " : ");
+				MlUtils.printHashMapIntIntArray(currentNeuronConnectionsInfo);;
+			}
+			
+		}
+		
+		return this.networkStructureBackwards;
+	}
+	
 	public ArrayList<HashMap<Integer,int[]>> getNetworkStructure(boolean printInfo){
 		
 		if(printInfo){

@@ -160,14 +160,14 @@ public class Backpropagator {
 			
 		}else{
 			
-			System.out.println("Computing Beta Error for Normal Neuron : " + neuron);
+			System.out.println("\n-------Computing Beta Error for Normal Neuron : " + neuron);
 			
 			//// -------   LINES OF CODE TO DECIPHER
-			double betaSumsFromNextRow = getBetaSumsFromNextRow(neuron, false);
-//			double neuronWeightToNextNeuron = getCurrentNeuronWeightInputFromNextRow(neuron, false);
-//			derivative = betaSumsFromNextRow * neuronWeightToNextNeuron; 
-//			
-//			
+			double betaSumsFromNextRow = getBetaSumsFromNextRow(neuron, true);
+			double neuronWeightToNextNeuron = getCurrentNeuronWeightInputFromNextRow(neuron, false);
+			derivative = betaSumsFromNextRow * neuronWeightToNextNeuron; 
+			
+			
 //			if(printInfo){
 //				
 //				System.out.println("(" + out + ") * ( 1 - " + out  + " ) * (" + derivative + ")");
@@ -186,21 +186,57 @@ public class Backpropagator {
 		
 	}
 	
-	
-	private double getBetaSumsFromNextRow(Perceptron neuron, boolean printInfo) {
+	private double getCurrentNeuronWeightInputFromNextRow(Perceptron neuron, boolean printInfo){
 		
-		double betaSumsFromNext = 0.0;
+		double neuronWeightToNextNeuron = Double.NEGATIVE_INFINITY;
 		
-		network.getNetworkStructure(true);
 //		int nextLayerIndex = (neuron.getLayerID(false)) + 1;
 //		ArrayList<Perceptron> nextLayer = network.getLayer(nextLayerIndex, false);
-//		
+//	
 //		for(int i = 0; i< nextLayer.size(); i++){
 //			
 //			Perceptron currentNeuronInNextLayer = nextLayer.get(i);
-//			double currentNextBetaVal = currentNeuronInNextLayer.getBetaError(false);
-//			betaSumsFromNext += currentNextBetaVal;
+//			ArrayList<Double> nextLayerWeights = currentNeuronInNextLayer.getInputWeightsRow(false);
+//			int neuronID = neuron.getNeuronID(false);
+//			neuronWeightToNextNeuron = nextLayerWeights.get(neuronID);
+//			
+//			if(printInfo){
+//				
+//				System.out.println(neuron + " weight into next neuron " + currentNeuronInNextLayer + " : " + neuronWeightToNextNeuron);
+//			}
+//			
+//			
 //		}
+		
+	
+		return neuronWeightToNextNeuron;
+	}	
+	
+	
+	
+	private double getBetaSumsFromNextRow(Perceptron neuron, boolean printInfo) {
+		
+		ArrayList<Perceptron> nextLayer = new ArrayList<Perceptron>();
+		double betaSumsFromNext = 0.0;
+		int neuronLayerIndex = neuron.getLayerID(false);
+		int neuronLayerInHashMap = neuronLayerIndex + 1;
+		HashMap<Integer, int[]> backwardsStructure = network.getNetworkStructureBackwards(false).get(neuronLayerInHashMap);
+		
+		int[] nextLayerInt = backwardsStructure.get(neuron.getNeuronID(false));
+		
+		for(int i = 0; i< nextLayerInt.length; i++){
+			
+			Perceptron next = network.getSingleNeuron(nextLayerInt[i], false);
+			nextLayer.add(next);
+		}
+		
+		
+		for(int i = 0; i< nextLayer.size(); i++){
+			
+			Perceptron currentNeuronInNextLayer = nextLayer.get(i);
+			double currentNextBetaVal = currentNeuronInNextLayer.getBetaError(false);
+			betaSumsFromNext += currentNextBetaVal;
+		}
 		
 		if(printInfo){
 			System.out.println(neuron + " Beta Sum From next layer : " + betaSumsFromNext);
@@ -208,11 +244,6 @@ public class Backpropagator {
 		
 		return betaSumsFromNext;
 	}
-	
-	
-	
-	
-	
 	
 	public int getCurrentExample(boolean printInfo){
 		

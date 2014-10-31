@@ -10,6 +10,7 @@ public class NetworkMaker {
 	private double learningRate;
 	private double momentum;
 	ArrayList<HashMap<Integer,int[]>> networkStructure;
+	ArrayList<HashMap<Integer, int[]>> networkBackwards;
 	ArrayList<HashMap<Integer,double[]>> networkStructureWeights;
 	private HashMap<Integer, Double> biasWeights;
 	private HashMap<Integer, Double> biasValues;
@@ -20,6 +21,7 @@ public class NetworkMaker {
 		
 		this.data = new ArrayList<ArrayList<Double>>();
 		this.networkStructure = new ArrayList<HashMap<Integer,int[]>>();
+		this.networkBackwards = new ArrayList<HashMap<Integer,int[]>>();
 		this.networkStructureWeights = new ArrayList<HashMap<Integer,double[]>>();
 		this.biasWeights = new HashMap<Integer, Double>();
 		this.biasValues = new HashMap<Integer, Double>();
@@ -32,6 +34,7 @@ public class NetworkMaker {
 			//System.out.println("--------Setting up Gia's 3 x 1 Network Configuration--------");
 			this.data = selectedConnectionsInputData();
 			this.networkStructure = selectedConnectionsNetworkStructure();
+			this.networkBackwards = selectedConnectionsNetworkBackwards();
 			this.networkStructureWeights = selectedConnectionNetworkStructureWeights();
 			this.biasValues = selectedConnectionsBiasValues();
 			this.biasWeights = selectedConnectionsBiasWeights();
@@ -42,6 +45,7 @@ public class NetworkMaker {
 			//System.out.println("--------Setting up Gia's 2 x 1 FullyConnected Configuration------");
 			this.data = fullyConnectedInputData();
 			this.networkStructure = fullyConnectedNetworkStructure();
+			this.networkBackwards = fullyConnectedNetworkBackwards();
 			this.networkStructureWeights = fullyConnectedNetworkStructureWeights();
 			this.biasValues = fullyConnectedBiasValues();
 			this.biasWeights = fullyConnectedBiasWeights();
@@ -114,6 +118,41 @@ public class NetworkMaker {
 		networkStructWeightsHere.add(OutputLayerWeights);
 		
 		return networkStructWeightsHere;
+	}
+
+	private ArrayList<HashMap<Integer, int[]>> fullyConnectedNetworkBackwards() {
+		
+		ArrayList<HashMap<Integer,int[]>> networkStructureBackwards = new ArrayList<HashMap<Integer,int[]>>();
+		
+		// -- Input Layer Connections Backwards
+		
+		HashMap<Integer,int[]> InputLayer = new HashMap<Integer, int[]>();
+		
+		int[] connections0 = {2,3};
+		int[] connections1 = {2,3};
+		InputLayer.put(0, connections0); // put the neuron ID, and then the IDs of the ones it is connected to
+		InputLayer.put(1, connections1);
+		
+		// -- Layer 0 Connections Backwards
+		
+		HashMap<Integer,int[]> Layer0 = new HashMap<Integer, int[]>();
+		int[] connections2 = {4};
+		int[] connections3 = {4};
+		Layer0.put(2, connections2);
+		Layer0.put(3, connections3);
+	
+		
+		// -- Output Layer Connections Backwards
+		
+		HashMap<Integer,int[]> OutputLayer = new HashMap<Integer, int[]>();
+		
+		OutputLayer.put(4,null);
+		
+		networkStructureBackwards.add(InputLayer);
+		networkStructureBackwards.add(Layer0);
+		networkStructureBackwards.add(OutputLayer);
+		
+		return networkStructureBackwards;
 	}
 
 	private ArrayList<HashMap<Integer,int[]>> fullyConnectedNetworkStructure(){
@@ -202,6 +241,42 @@ public class NetworkMaker {
 		return biasValues;
 	}
 	
+	private ArrayList<HashMap<Integer, int[]>> selectedConnectionsNetworkBackwards() {
+		
+		ArrayList<HashMap<Integer,int[]>> networkStructureSelected = new ArrayList<HashMap<Integer,int[]>>();
+		
+		// -- Input Layer Connections
+		
+		HashMap<Integer,int[]> InputLayer = new HashMap<Integer, int[]>();
+		int[] connections0 = {2,5,4};
+		int[] connections1 = {3,4};
+		InputLayer.put(0, connections0); // put the neuron ID, and then the IDs of the ones it is connected to
+		InputLayer.put(1, connections1);
+		
+		// -- Layer 0 Connections
+		
+		HashMap<Integer,int[]> Layer0 = new HashMap<Integer, int[]>();
+		int[] connections2 = {5};
+		int[] connections3 = {5};
+		int[] connections4 = {5};
+		Layer0.put(2, connections2);
+		Layer0.put(3, connections3);
+		Layer0.put(4, connections4);
+		
+		// -- Output Layer Connections
+		
+		HashMap<Integer,int[]> OutputLayer = new HashMap<Integer, int[]>();
+		int[] connections5 = null;
+		OutputLayer.put(5,connections5);
+		
+		networkStructureSelected.add(InputLayer);
+		networkStructureSelected.add(Layer0);
+		networkStructureSelected.add(OutputLayer);
+		
+		return networkStructureSelected;
+	}
+
+
 	private ArrayList<HashMap<Integer,double[]>> selectedConnectionNetworkStructureWeights(){
 		
 		ArrayList<HashMap<Integer,double[]>> networkStructWeightsHere = new ArrayList<HashMap<Integer,double[]>>();
@@ -295,6 +370,15 @@ public class NetworkMaker {
 			System.out.println("NMaker Input data is :" + this.data);
 		}
 		return this.data;
+	}
+	
+	public ArrayList<HashMap<Integer,int[]>> getSelectedConnectionsNetworkStructureBackwards(boolean printInfo){
+		
+		if(printInfo){
+			System.out.println("Network Structure : " + this.networkBackwards);
+		} 
+		return this.networkBackwards;
+		
 	}
 	
 	public ArrayList<HashMap<Integer,int[]>> getSelectedConnectionsNetworkStructure(boolean printInfo){

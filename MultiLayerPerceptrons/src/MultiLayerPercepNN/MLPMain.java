@@ -14,6 +14,7 @@ public class MLPMain {
 		ArrayList<ArrayList<Double>> data = networkMaker.getInputData(false);
 		ArrayList<Double> outputs = networkMaker.getOutputs(true);
 		ArrayList<HashMap<Integer,int[]>> networkStructure = networkMaker.getSelectedConnectionsNetworkStructure(false);
+		ArrayList<HashMap<Integer,int[]>> networkStructureBackwards = networkMaker.getSelectedConnectionsNetworkStructureBackwards(true);
 		ArrayList<HashMap<Integer,double[]>> networkStructureWeights = networkMaker.getSelectedConnectionsNetworkStructureWeights(false);
 		double learningRate = networkMaker.getLearningRate(false);
 		double momentum = networkMaker.getMomentum(false);
@@ -28,7 +29,7 @@ public class MLPMain {
 		int layerToTest = 0; // set the layer to test.  -1 is the input layer
 		boolean printInfo = false;
 		MLNetwork network = new MLNetwork(data, outputs, networkStructure, 
-				networkStructureWeights, biasWeights, biasValues, 
+				networkStructureBackwards,networkStructureWeights, biasWeights, biasValues, 
 				learningRate, momentum, printFeedForward);
 		int numberOfExamples = network.getNumberOfExamples(false);
 		numberOfExamples = 1; // Overwriting the number of examples here
