@@ -12,6 +12,7 @@ public class MLPMain {
 		//NetworkMaker networkMaker = new NetworkMaker("SelectedConnections");
 		NetworkMaker networkMaker = new NetworkMaker("FullyConnected");
 		ArrayList<ArrayList<Double>> data = networkMaker.getInputData(false);
+		ArrayList<Double> outputs = networkMaker.getOutputs(true);
 		ArrayList<HashMap<Integer,int[]>> networkStructure = networkMaker.getSelectedConnectionsNetworkStructure(false);
 		ArrayList<HashMap<Integer,double[]>> networkStructureWeights = networkMaker.getSelectedConnectionsNetworkStructureWeights(false);
 		double learningRate = networkMaker.getLearningRate(false);
@@ -19,19 +20,18 @@ public class MLPMain {
 		HashMap<Integer, Double> biasWeights = networkMaker.getBiasWeights(false);
 		HashMap<Integer, Double> biasValues = networkMaker.getBiasValues(false);
 		
-		// Create the network
+		
+		// Settings for Feed Forward
 		boolean printFeedForward = true;
-		MLNetwork network = new MLNetwork(data, networkStructure, networkStructureWeights, biasWeights, biasValues, learningRate, momentum, printFeedForward);
-		//network.getNeurons(false);
+		int numberOfEpochs = 1;
+		boolean test1Layer = false; // if on, will only test 1 layer
+		int layerToTest = 0; // set the layer to test.  -1 is the input layer
+		boolean printInfo = false;
+		MLNetwork network = new MLNetwork(data, outputs, networkStructure, networkStructureWeights, biasWeights, biasValues, learningRate, momentum, printFeedForward);
 		int numberOfExamples = network.getNumberOfExamples(false);
 		numberOfExamples = 1; // Overwriting the number of examples here
-		boolean test1Layer = false; // if on, will only test 1 layer
-		boolean printInfo = false;
-		int bpLayerToTest = 2;
 		
 		
-		int layerToTest = 0; // set the layer to test.  -1 is the input layer
-		int numberOfEpochs = 1;
 		
 		for(int i = 0; i< numberOfEpochs; i++){
 			
@@ -39,9 +39,10 @@ public class MLPMain {
 			
 			for(int j = 0; j<numberOfExamples; j++ ){
 				
-				network.feedForward(j, printInfo, test1Layer, layerToTest);
+				int exampleNumber = j;
+				network.feedForward(exampleNumber, printInfo, test1Layer, layerToTest);
 				Backpropagator backpropagate = new Backpropagator(network);
-				backpropagate.backpropagate();
+				backpropagate.backpropagate(exampleNumber);
 			
 			}
 			

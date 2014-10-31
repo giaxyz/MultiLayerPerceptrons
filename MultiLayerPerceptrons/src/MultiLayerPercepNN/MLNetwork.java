@@ -17,11 +17,13 @@ public class MLNetwork {
 	private ArrayList<Perceptron> allNeurons;
 	private ArrayList<Integer> allLayers;
 	private boolean printFeedForwardDetails;
+	private ArrayList<Double> outputs;
 	
 	
 	public MLNetwork(
 			
 			ArrayList<ArrayList<Double>> inputData,
+			ArrayList<Double> outputs,
 			ArrayList<HashMap<Integer,int[]>> networkStructure, 
 			ArrayList<HashMap<Integer,double[]>> networkWeights,
 			HashMap<Integer, Double> biasWeights,
@@ -34,6 +36,7 @@ public class MLNetwork {
 		this.printFeedForwardDetails = printFeedForward;
 		this.allLayers = new ArrayList<Integer>();
 		this.inputData = inputData;
+		this.outputs = outputs;
 		this.networkStructure = networkStructure;
 		this.networkWeights = networkWeights;
 		this.biasWeights = biasWeights;
@@ -533,4 +536,15 @@ public class MLNetwork {
 		return numberOfExamples;
 		
 	}
+
+	public ArrayList<Double> getOutputData(boolean printInfo){
+		
+		if(printInfo){
+			System.out.println("Outputs are : " + this.outputs);
+		}
+		
+		return this.outputs;
+		
+	}
+
 }

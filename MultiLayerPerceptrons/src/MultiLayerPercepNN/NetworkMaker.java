@@ -13,6 +13,7 @@ public class NetworkMaker {
 	ArrayList<HashMap<Integer,double[]>> networkStructureWeights;
 	private HashMap<Integer, Double> biasWeights;
 	private HashMap<Integer, Double> biasValues;
+	private ArrayList<Double> outputs;
 	
 	public NetworkMaker(String networkName) throws Exception{
 		
@@ -34,6 +35,7 @@ public class NetworkMaker {
 			this.networkStructureWeights = selectedConnectionNetworkStructureWeights();
 			this.biasValues = selectedConnectionsBiasValues();
 			this.biasWeights = selectedConnectionsBiasWeights();
+			this.outputs = selectedConnectionsOutputs();
 		
 		}else if (networkName.equals("FullyConnected")){
 			
@@ -43,6 +45,7 @@ public class NetworkMaker {
 			this.networkStructureWeights = fullyConnectedNetworkStructureWeights();
 			this.biasValues = fullyConnectedBiasValues();
 			this.biasWeights = fullyConnectedBiasWeights();
+			this.outputs = fullyConnectedOutputs();
 			
 		}else{
 			
@@ -54,6 +57,12 @@ public class NetworkMaker {
 	// ------ Set Methods for the "Fully Connected" Network, so named, all hard coded
 	// This section needs duplicating and setting for any other network, and you 
 	// have to know what you're doing in order to set this up properly
+	private ArrayList<Double> fullyConnectedOutputs(){
+		ArrayList<Double> outputs = new ArrayList<Double>();
+		outputs.add(0.0);
+		outputs.add(1.0);
+		return outputs;
+	}
 	
 	private HashMap<Integer, Double> fullyConnectedBiasWeights(){
 
@@ -160,6 +169,14 @@ public class NetworkMaker {
 	// ------ Set Methods for the "Selected Connections" Network, so named, all hard coded
 	// This section needs duplicating and setting for any other network, and you 
 	// have to know what you're doing in order to set this up properly
+	
+	private ArrayList<Double> selectedConnectionsOutputs(){
+		
+		ArrayList<Double> outputs = new ArrayList<Double>();
+		outputs.add(0.0);
+		outputs.add(1.0);
+		return outputs;
+	}
 	
 	private HashMap<Integer, Double> selectedConnectionsBiasWeights(){
 
@@ -326,6 +343,14 @@ public class NetworkMaker {
 			System.out.println("Bias Weights : " + this.biasWeights);
 		}
 		return this.biasWeights;
+	}
+
+	public ArrayList<Double> getOutputs(boolean printInfo){
+		
+		if(printInfo){
+			System.out.println("Data Outputs ordered by Example Are : " + this.outputs);
+		}
+		return this.outputs;
 	}
 }
 

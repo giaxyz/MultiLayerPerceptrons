@@ -311,6 +311,10 @@ public class Perceptron {
 		return this.isInput;
 	}
 	
+	public boolean getIsOutput(){
+		return this.isOutput;
+	}
+	
 
 	
 }
