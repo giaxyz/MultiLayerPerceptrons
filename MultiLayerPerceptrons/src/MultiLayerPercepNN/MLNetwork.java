@@ -401,6 +401,28 @@ public class MLNetwork {
 
 	// ----- All Get Methods ---------------------------------------------------------
 	
+	public Perceptron getSingleNeuron(int neuronID, boolean printInfo){
+		
+		
+		for(int i = 0; i< this.allNeurons.size(); i++){
+			
+			Perceptron currentPerceptron = allNeurons.get(i);
+			
+			if(currentPerceptron.getNeuronID(false) == neuronID){
+				
+				if(printInfo){
+					
+					System.out.println("\t\t---Getting single neuron " + currentPerceptron.getNeuronDetails(false) );
+				}
+				
+				return currentPerceptron;
+			}
+		}
+		
+		return null;
+		
+	}
+	
 	public ArrayList<Perceptron> getNeurons(boolean printInfo){
 		
 		if(printInfo){
@@ -547,4 +569,11 @@ public class MLNetwork {
 		
 	}
 
+	public double getLearningRate(boolean printInfo){
+		
+		if(printInfo){
+			System.out.println("Learning rate is : " + this.learningRate);
+		}
+		return this.learningRate;
+	}
 }

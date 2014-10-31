@@ -53,11 +53,21 @@ public class Perceptron {
 	
 	// --------------   All Get and Set Methods  -------------------------------------
 	
+	
+	public void setDeltaRow(ArrayList<Double> deltaValues, boolean printInfo){
+		
+		this.deltaRow = deltaValues;
+		if(printInfo){
+			System.out.println("Delta Values set to : " + deltaValues);
+		}
+		
+	}
+	
 	private void setBiasWeight(double biasWeight){
 		this.biasWeight = biasWeight;
 	}
 
-	private double getBiasWeight(boolean printInfo){
+	public double getBiasWeight(boolean printInfo){
 		
 		if(printInfo){
 			System.out.println("BiasWeight for " + this.neuronDetails + " : " + this.biasWeight);
@@ -315,6 +325,7 @@ public class Perceptron {
 		return this.isOutput;
 	}
 	
+
 
 	
 }

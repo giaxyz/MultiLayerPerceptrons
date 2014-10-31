@@ -1,7 +1,7 @@
 package MultiLayerPercepNN;
 
 import java.util.ArrayList;
-
+import java.util.HashMap;
 
 public class Backpropagator {
 
@@ -52,8 +52,70 @@ public class Backpropagator {
 			}
 			
 			
+			ArrayList<Double> deltaValues = computeDeltaValues(currentNeuron, false);
+			currentNeuron.setDeltaRow(deltaValues, false);
+			
+			if(printBackPropInfo){
+				System.out.println("\t---" + " deltas set to : " + deltaValues);
+			}
+			
 		}
 		
+	}
+	
+	private ArrayList<Double> computeDeltaValues(Perceptron currentNeuron,
+			boolean printInfo) {
+		
+		ArrayList<Double> deltaValues = new ArrayList<Double>();
+		double learningRate = network.getLearningRate(false);
+		double betaValue = currentNeuron.getBetaError(false);
+		ArrayList<Double> previousLayerOutputs = getPreviousLayerOutput(currentNeuron, false);
+	
+		System.out.println("prev layer outs : " + previousLayerOutputs);
+		
+		for(int i = 0; i< previousLayerOutputs.size(); i++){
+			
+			if(printBackPropInfo){
+				System.out.println("\t---Computing for " + currentNeuron + "(" + learningRate + ") * (" + betaValue + ")" + " * (" + previousLayerOutputs.get(i) + ")\n");
+			}
+			
+			double deltaValue = MlUtils.formatDouble((learningRate)*(betaValue)*(previousLayerOutputs.get(i)));
+			deltaValues.add(deltaValue);
+		}
+		
+		return deltaValues;
+
+	}
+	
+	public ArrayList<Double> getPreviousLayerOutput(Perceptron neuron, boolean printInfo){
+		
+		ArrayList<Double> previousLayerOutputs = new ArrayList<Double>();
+		int currentNeuronID = neuron.getNeuronID(false);
+		int currentNeuronLayerID = neuron.getLayerID(false);
+		int neuronLayerIdInHashMap = currentNeuronLayerID + 1;
+		HashMap<Integer, int[]> previousConnectedNeuronsHash = network.getNetworkStructure(false).get(neuronLayerIdInHashMap);
+		MlUtils.printHashMapIntIntArray(previousConnectedNeuronsHash);
+		int[] previousConnectedNeurons = previousConnectedNeuronsHash.get(currentNeuronID);
+	
+		
+		for(int i = 0; i< previousConnectedNeurons.length; i++){
+			
+			int currentConnectedNeuron = previousConnectedNeurons[i];
+			Perceptron connectedNeuron = network.getSingleNeuron(currentConnectedNeuron, false);
+			double connectedNeuronOutput = connectedNeuron.getOutput(false);
+			previousLayerOutputs.add(connectedNeuronOutput);
+			
+		}
+		
+		double currentNeuronBiasWeight = neuron.getBiasWeight(false);
+		previousLayerOutputs.add(currentNeuronBiasWeight);
+		
+		if(printInfo){
+			System.out.println("PreviousLayer Outs (with 1.0 for bias) is : " + previousLayerOutputs);
+		}
+		
+		return previousLayerOutputs;
+
 	}
 	
 	public double computeBetaError(Perceptron neuron, boolean printInfo){

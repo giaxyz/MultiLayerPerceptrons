@@ -27,7 +27,9 @@ public class MLPMain {
 		boolean test1Layer = false; // if on, will only test 1 layer
 		int layerToTest = 0; // set the layer to test.  -1 is the input layer
 		boolean printInfo = false;
-		MLNetwork network = new MLNetwork(data, outputs, networkStructure, networkStructureWeights, biasWeights, biasValues, learningRate, momentum, printFeedForward);
+		MLNetwork network = new MLNetwork(data, outputs, networkStructure, 
+				networkStructureWeights, biasWeights, biasValues, 
+				learningRate, momentum, printFeedForward);
 		int numberOfExamples = network.getNumberOfExamples(false);
 		numberOfExamples = 1; // Overwriting the number of examples here
 		
