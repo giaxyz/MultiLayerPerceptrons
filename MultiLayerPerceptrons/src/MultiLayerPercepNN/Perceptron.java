@@ -365,5 +365,12 @@ public class Perceptron {
 		}
 		return this.neuronConnections;
 	}
+
+	
+	public void setInputWeightsRow(double[] updatedWeights) {
+		
+		this.neuronWeights = updatedWeights;
+		
+	}
 	
 }

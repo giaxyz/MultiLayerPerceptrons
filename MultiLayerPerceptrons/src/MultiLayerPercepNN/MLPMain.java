@@ -33,20 +33,23 @@ public class MLPMain {
 				networkStructureBackwards,networkStructureWeights, 
 				learningRate, momentum, printFeedForward);
 		int numberOfExamples = network.getNumberOfExamples(false);
-		numberOfExamples = 1; // Overwriting the number of examples here
+		numberOfExamples = 2; // Overwriting the number of examples here
 		
 		
 		
 		for(int i = 0; i< numberOfEpochs; i++){
 			
-			System.out.println(" \n\n\n -------Begin Training, epoch number : " + i + " -------\n\n ");
+			System.out.println(" \n\n\n -------------------------Begin Training, epoch number : " + i + " -------\n\n ");
 			
 			for(int j = 0; j<numberOfExamples; j++ ){
+				
+				System.out.println(" \n\n\n -------------------------Begin Training, Example number : " + j + " -------\n\n ");
 				
 				int exampleNumber = j;
 				network.feedForward(exampleNumber, printInfo, test1Layer, layerToTest);
 				Backpropagator backpropagate = new Backpropagator(network);
-				backpropagate.backpropagate(exampleNumber);
+				int lastNeuron = backpropagate.backpropagate(exampleNumber);
+				backpropagate.updateWeights(lastNeuron, printInfo);
 			
 			}
 			

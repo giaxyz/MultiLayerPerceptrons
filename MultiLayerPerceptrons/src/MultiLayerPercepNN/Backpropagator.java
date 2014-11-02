@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
+
 public class Backpropagator {
 
 	private MLNetwork network;
@@ -24,7 +25,7 @@ public class Backpropagator {
 		
 	}
 
-	public void backpropagate(int exampleNumber) {
+	public int backpropagate(int exampleNumber) {
 		
 		System.out.println("\n\n\t\t ----------------  Backpropagating ---------------  ");
 		
@@ -62,10 +63,59 @@ public class Backpropagator {
 			}
 			
 		}
+		return lastNeuron;
 		
 	}
 	
-
+	// originally passed layer index
+	public void updateWeights(int lastNeuron, boolean printInfo) throws Exception{
+		
+		
+//		ArrayList<ArrayList<Neuron>> networkLayers = network.getNetworkLayers(false);
+//		ArrayList<Neuron> currentNeuronLayer = networkLayers.get(layerIndex);
+		
+		
+		for(int i = (this.networkSize - 1);  i>=lastNeuron; i--){
+			
+			Perceptron neuron = this.network.getNeurons(false).get(i);
+			
+			if(printBackPropInfo){
+				System.out.println("\n\n------------Updating weights for : " + neuron + "\n");
+			}
+			
+			ArrayList<Double> deltaMatrix = neuron.getDeltaRow(printBackPropInfo);
+			double[] weightMatrix = neuron.getInputWeightsRow(printBackPropInfo);
+			ArrayList<Double> updatedWeightsAL = new ArrayList<Double>();
+			if((weightMatrix.length) != deltaMatrix.size()){
+				
+				throw new Exception("Error, weight Array is not the same as delta array for " + neuron);
+			}
+			
+			for(int j = 0; j< deltaMatrix.size(); j++){
+				
+				double deltaPlusWeight = MlUtils.formatDouble((weightMatrix[j] + deltaMatrix.get(j)));
+				updatedWeightsAL.add(deltaPlusWeight);
+			}
+			
+			double[] updatedWeights = new double[updatedWeightsAL.size()];
+			
+			for(int j = 0; j < updatedWeightsAL.size(); j++){
+				
+				updatedWeights[j] = updatedWeightsAL.get(j);
+			}
+			
+			neuron.setInputWeightsRow(updatedWeights);
+			
+			if(printBackPropInfo){
+				
+				System.out.println("\n" + neuron  + " Updated Weights Calculated and set : " );
+				MlUtils.printDoubleArray(neuron.getInputWeightsRow(false));
+				
+			}
+		}
+		
+		
+	}
 	
 	private ArrayList<Double> computeDeltaValues(Perceptron currentNeuron,
 			boolean printInfo) {
@@ -220,8 +270,6 @@ public class Backpropagator {
 		
 		return neuronWeightToNextNeuron;
 	}	
-	
-	
 	
 	private double getBetaSumsFromNextRow(Perceptron neuron, boolean printInfo) {
 		
