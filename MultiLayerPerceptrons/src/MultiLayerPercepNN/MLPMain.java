@@ -56,7 +56,24 @@ public class MLPMain {
 			
 		}
 		
+		activateSigmoidTest(-0.0066);
+	}
+	
+public static double activateSigmoidTest(double sumValue){
+		
+		double finalSigmoidVal;
+		double thresholdVal =  1.0 / (1 + Math.exp(-1.0 * sumValue));
+			thresholdVal = MlUtils.formatDouble(thresholdVal);
+			
+			finalSigmoidVal = thresholdVal;
+	
+		System.out.println("activate : " + finalSigmoidVal);
+		
+		return finalSigmoidVal;
 		
 	}
 
 }
+
+
+
